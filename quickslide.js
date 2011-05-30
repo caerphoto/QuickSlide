@@ -39,12 +39,12 @@ var QuickSlideConfig;
 			handler.apply(node, [normalizeEvent(e || window.event)]);
 		};
 
-		if (typeof node.attachEvent === "function") {
+		if (node.attachEvent) {
 			// Attach handler for IE.
 			node.attachEvent("on" + type, wrapHandler);
 		} else {
 			// Attach handler for standards-compliant browsers.
-			node.addEventListener(type, wrapHandler);
+			node.addEventListener(type, wrapHandler, false);
 		}
 
 		return { node: node, type: type, handler: wrapHandler };
