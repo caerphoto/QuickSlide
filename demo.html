@@ -1,10 +1,50 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>QuickSlide Demo</title>
+		<title>QuickSlide</title>
+		<link rel="stylesheet" href="demo.css">
+		<link rel="stylesheet" href="quickslide.css">
 	</head>
+
 	<body>
-		<h1>QuickSlide Demo</h1>
+		<h1>QuickSlide</h1>
+		<p class="intro">QuickSlide is a popup image viewer.</p>
+		<p>Adding it to a page is simple:
+		<ol>
+			<li>
+				<p>Include the <code>quickslide.js</code> file at the bottom of your
+				page:</p>
+				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
+			</li>
+			<li>
+				<p>Mark your thumbnail image links with <code>rel="quickslide"</code>:</p>
+
+<pre><code>&lt;a href="myphoto_big.jpg" <em>rel="quickslide"</em>&gt;
+  &lt;img src="myphoto_thumb.jpg"&gt;
+&lt;/a&gt;</code></pre>
+			</li>
+			<li>
+			Add a <code>quickslide</code> class to a parent element:
+<pre><code>&lt;div class="gallery-container <em>quickslide</em>"&gt;
+  &lt;!-- thumbnail image links go here --&gt;
+&lt;/div&gt;</code></pre>
+			</li>
+		</ol>
+
+		<h2>Example</h2>
+		<p>Click thumbnails to show larger image.</p>
+
+		<div class="gallery quickslide">
+			<a href="images/buslane_b.jpg"><img src="images/buslane_t.jpg"/>Bus Lane</a>
+			<a href="images/cathedral_b.jpg"><img src="images/cathedral_t.jpg"/>Cathedral</a>
+			<a href="images/euston_b.jpg"><img src="images/euston_t.jpg"/>Euston</a>
+			<a href="images/gig_b.jpg"><img src="images/gig_t.jpg"/>Gig</a>
+			<a href="images/hedge_b.jpg"><img src="images/hedge_t.jpg"/>Hedge</a>
+			<a href="images/lucy_b.jpg"><img src="images/lucy_t.jpg"/>Cat</a>
+			<a href="images/snow_b.jpg"><img src="images/snow_t.jpg"/>Snow</a>
+			<a href="images/totoro_b.jpg"><img src="images/totoro_t.jpg"/>Totoro</a>
+		</div>
+
 		<script src="quickslide.js"></script>
 	</body>
 </html>
