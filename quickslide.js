@@ -84,17 +84,11 @@ var QuickSlideConfig;
 	};
 
 	setPopup = function (fromNode) {
-		// Reload image if URL is the same as the current one.
-		if (popupImg.src === fromNode.href) {
-			popupImg.src = "";
-		}
-		popupImg.src = fromNode.href;
-
-		popupBox.style.width = loadingSpinner.width + "px";
-		popupBox.style.height = loadingSpinner.height + "px";
-
 		document.body.appendChild(popupBox);
+		popupBox.appendChild(loadingSpinner);
 		recenterBox(popupBox, loadingSpinner);
+
+		popupImg.src = fromNode.href;
 		popupVisible = true;
 	};
 
@@ -102,29 +96,19 @@ var QuickSlideConfig;
 		// Puts the popup box in the centre of the window, based on the size of
 		// the given image. If the image is larger than the window it is scaled
 		// down to fit.
-		var s = box.style, cw, ch;
+		var s = box.style, cw, ch, scrollTop = document.body.scrollTop ||
+				(document.documentElement && document.documentElement.scrollTop);
 
 		// Get size of browser window.
-		if (document.documentElement && document.documentElement.offsetWidth) {
-			cw = document.documentElement.offsetWidth;
-			ch = document.documentElement.offsetHeight;
-		} else {
-			cw = window.innerWidth;
-			ch = window.innerHeight;
-		}
-
-		// If the position style of the box is 'fixed', this won't be
-		// necessary.
-		ch -= document.body.scrollTop;
+		cw = document.documentElement.clientWidth;
+		ch = document.documentElement.clientHeight;
 
 		if (config.auto_fit) {
 			if (srcImg.width > cw - 25) {
-				console.log("too wide:", srcImg.width, cw);
 				srcImg.width = cw - 25;
 			}
 
 			if (srcImg.height > ch - 40) {
-				console.log("too high:", srcImg.height, ch);
 				srcImg.height = ch - 40;
 			}
 		}
@@ -132,7 +116,7 @@ var QuickSlideConfig;
 		s.width = srcImg.width + "px";
 		s.height = srcImg.height + "px";
 		s.top = (Math.round((ch - srcImg.height - 40) / 2) +
-			document.body.scrollTop) + "px";
+			scrollTop) + "px";
 		s.left = Math.round((cw - srcImg.width) / 2) + "px";
 	};
 
@@ -153,6 +137,8 @@ var QuickSlideConfig;
 		try {
 			popupBox.removeChild(popupImg);
 		} catch (err) {}
+
+		popupImg.src = "";
 
 		popupBox.appendChild(loadingSpinner);
 		document.body.removeChild(popupBox);
