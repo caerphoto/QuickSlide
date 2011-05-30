@@ -124,7 +124,7 @@ var QuickSlideConfig;
 
 	// Preload 'loading' spinner image.
 	loadingSpinner.src = config.loading_spinner_url ||
-		"images/loading-spinner.gif";
+		"loading-spinner.gif";
 
 	popupBox.appendChild(loadingSpinner);
 	popupBox.className = "quickslide-popup-box";
