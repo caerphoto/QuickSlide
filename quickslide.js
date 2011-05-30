@@ -5,14 +5,14 @@ var QuickSlideConfig;
 
 (function (config) {
 	var popupVisible = false,
-		loadingSpinner = new Image(),
-		popupImg = new Image(),
+		loadingSpinner = document.createElement("img"),
+		popupImg,
 		popupBox = document.createElement("div"),
 		popupNext, popupPrev,
 
 		// Functions:
 		normalizeEvent, addListener, triggerEvent,
-		setupGalleryLinks, setPopup, getLinkNodes, recenterBox;
+		setupGalleryLinks, setPopup, getLinkNodes, recenterBox, popupLoaded;
 
 	// Couple of convenience functions for dealing with events.
 	normalizeEvent = function (e) {
@@ -88,6 +88,16 @@ var QuickSlideConfig;
 		popupBox.appendChild(loadingSpinner);
 		recenterBox(popupBox, loadingSpinner);
 
+		// Need to create a new image because if we just change the .src
+		// property, IE9 doesn't update the width and height once the new image
+		// loads, so all images display at the same size as the first one to be
+		// opened.
+		popupImg = new Image();
+		addListener(popupImg, "load", popupLoaded);
+
+		// Need to set .src after attaching event listener, otherwise IE8 fails
+		// to trigger the "load" event when loading from the cache, since the
+		// image gets loaded before the assigning of the event handler.
 		popupImg.src = fromNode.href;
 		popupVisible = true;
 	};
@@ -146,23 +156,29 @@ var QuickSlideConfig;
 		popupVisible = false;
 	});
 
-	addListener(popupImg, "load", function (e) {
+	popupLoaded = function () {
 		// Handler for when the full-sized image finishes loading.
-		var mw = config.max_width, mh = config.max_height;
+		var w, h, mw = config.max_width, mh = config.max_height;
 		popupBox.removeChild(loadingSpinner);
 
+		w = popupImg.width;
+		h = popupImg.height;
+
 		if (mw && popupImg.width > mw) {
-			popupImg.width = mw;
+			w = mw;
 		}
 
 		if (mh && popupImg.height > mh) {
-			popupImg.height = mh;
+			h = mh;
 		}
+
+		popupImg.setAttribute("width", "" + w);
+		popupImg.setAttribute("height", "" + h);
 
 		popupBox.appendChild(popupImg);
 
 		recenterBox(popupBox, popupImg);
-	});
+	};
 
 	addListener(window, "load", function () {
 		setupGalleryLinks();
