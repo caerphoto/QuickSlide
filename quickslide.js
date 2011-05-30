@@ -93,11 +93,7 @@ var QuickSlideConfig;
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
-		addListener(popupImg, "load", function () {
-			setTimeout(function () {
-				popupLoaded();
-			}, 1500);
-		});
+		addListener(popupImg, "load", popupLoaded);
 
 		// Need to set .src after attaching event listener, otherwise IE8 fails
 		// to trigger the "load" event when loading from the cache, since the
