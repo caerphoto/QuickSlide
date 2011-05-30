@@ -3,6 +3,8 @@ body {
 	color: #EEE;
 	font-family: "Lucida Grande", Tahoma;
 	line-height: 1.5;
+	margin: 1em auto;
+	width: 50em;
 }
 
 a {
