@@ -9,11 +9,11 @@ Adding it to a page is simple:
 
         <script src="quickslide.js"></script>
 
-2. Add the `quickslide` class to a parent element of the image links:
+2. Add `rel="quickslide"` to any links you want to convert to popups:
 
-        <div class="gallery-container quickslide">
-          <a href="photo1_big.jpg"><img src="photo1_thumb.jpg"></a>
-          <a href="photo2_big.jpg"><img src="photo2_thumb.jpg"></a>
-          <a href="photo3_big.jpg"><img src="photo3_thumb.jpg"></a>
-          <!-- etc. -->
-        </div>
+        <a href="images/buslane_b.jpg" rel="quickslide">
+          <img src="images/buslane_t.jpg"/>Bus Lane
+        </a>
+        <a href="images/cathedral_b.jpg" rel="quickslide">
+          <img src="images/cathedral_t.jpg"/>Cathedral
+        </a>

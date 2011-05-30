@@ -68,7 +68,7 @@ var QuickSlideConfig;
 	setupGalleryLinks = function () {
 		var galleryLinks, i, len;
 
-		galleryLinks = document.querySelectorAll(".quickslide a");
+		galleryLinks = document.querySelectorAll("a[rel=quickslide]");
 
 		// Assign a separate click handler for each gallery, so that the
 		// handler will loop through only the links in its gallery.
@@ -84,10 +84,6 @@ var QuickSlideConfig;
 	};
 
 	setPopup = function (fromNode) {
-		var links, i, len;
-
-		links = fromNode.parentNode.querySelectorAll("a");
-
 		// Reload image if URL is the same as the current one.
 		if (popupImg.src === fromNode.href) {
 			popupImg.src = "";

@@ -8,7 +8,7 @@
 
 	<body>
 		<h1>QuickSlide</h1>
-		<p>QuickSlide is a popup image viewer. Adding it to a page is simple:
+		<p>QuickSlide is a basic popup image viewer. Adding it to a page is easy:
 		<ol>
 			<li>
 				<p>Include the <code>quickslide.js</code> file at the bottom of your
@@ -16,28 +16,43 @@
 				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
 			</li>
 			<li>
-			Add a <code>quickslide</code> class to a parent element of the image
-			links:
-<pre><code>&lt;div class="gallery-container <em>quickslide</em>"&gt;
-  &lt;a href="photo1_big.jpg"&gt;&lt;img src="photo1_thumb.jpg"&gt;&lt;/a&gt;
-  &lt;a href="photo2_big.jpg"&gt;&lt;img src="photo2_thumb.jpg"&gt;&lt;/a&gt;
-  &lt;!-- etc. --&gt;
-&lt;/div&gt;</code></pre>
+				<p>Add <code>rel="quickslide"</code> to any links you want to convert
+				to popups:</p>
+<pre><code>&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
+  &lt;img src="images/buslane_t.jpg"/&gt;Bus Lane
+&lt;/a&gt;
+</code></pre>
 			</li>
 		</ol>
 
 		<h2>Example</h2>
 		<p>Click thumbnails to show larger image.</p>
 
-		<div class="gallery quickslide">
-			<a href="images/buslane_b.jpg"><img src="images/buslane_t.jpg"/>Bus Lane</a>
-			<a href="images/cathedral_b.jpg"><img src="images/cathedral_t.jpg"/>Cathedral</a>
-			<a href="images/euston_b.jpg"><img src="images/euston_t.jpg"/>Euston</a>
-			<a href="images/gig_b.jpg"><img src="images/gig_t.jpg"/>Gig</a>
-			<a href="images/hedge_b.jpg"><img src="images/hedge_t.jpg"/>Hedge</a>
-			<a href="images/lucy_b.jpg"><img src="images/lucy_t.jpg"/>Cat</a>
-			<a href="images/snow_b.jpg"><img src="images/snow_t.jpg"/>Snow</a>
-			<a href="images/totoro_b.jpg"><img src="images/totoro_t.jpg"/>Totoro</a>
+		<div class="gallery">
+			<a href="images/buslane_b.jpg" rel="quickslide">
+				<img src="images/buslane_t.jpg"/>Bus Lane
+			</a>
+			<a href="images/cathedral_b.jpg" rel="quickslide">
+				<img src="images/cathedral_t.jpg"/>Cathedral
+			</a>
+			<a href="images/euston_b.jpg" rel="quickslide">
+				<img src="images/euston_t.jpg"/>Euston
+			</a>
+			<a href="images/gig_b.jpg" rel="quickslide">
+				<img src="images/gig_t.jpg"/>Gig
+			</a>
+			<a href="images/hedge_b.jpg" rel="quickslide">
+				<img src="images/hedge_t.jpg"/>Hedge
+			</a>
+			<a href="images/lucy_b.jpg" rel="quickslide">
+				<img src="images/lucy_t.jpg"/>Cat
+			</a>
+			<a href="images/snow_b.jpg" rel="quickslide">
+				<img src="images/snow_t.jpg"/>Snow
+			</a>
+			<a href="images/totoro_b.jpg" rel="quickslide">
+				<img src="images/totoro_t.jpg"/>Totoro
+			</a>
 		</div>
 
 		<script>
