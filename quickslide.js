@@ -1,7 +1,10 @@
 /*globals window */
-(function () {
-	var QuickSlideConfig,
-		popupVisible = false,
+// Global config object, which can be defined in a <script> tag in the HTML.
+// Contains settings for max image dimensions, auto-scaling, etc.
+var QuickSlideConfig;
+
+(function (config) {
+	var popupVisible = false,
 		loadingSpinner = new Image(),
 		popupImg = new Image(),
 		popupBox = document.createElement("div"),
@@ -9,7 +12,7 @@
 
 		// Functions:
 		normalizeEvent, addListener, triggerEvent,
-		setupGalleryLinks, setPopup, getLinkNodes;
+		setupGalleryLinks, setPopup, getLinkNodes, recenterBox;
 
 	// Couple of convenience functions for dealing with events.
 	normalizeEvent = function (e) {
@@ -84,39 +87,26 @@
 		var links, i, len;
 
 		links = fromNode.parentNode.querySelectorAll("a");
+
+		// Reload image if URL is the same as the current one.
+		if (popupImg.src === fromNode.href) {
+			popupImg.src = "";
+		}
 		popupImg.src = fromNode.href;
 
 		popupBox.style.width = loadingSpinner.width + "px";
 		popupBox.style.height = loadingSpinner.height + "px";
 
 		document.body.appendChild(popupBox);
+		recenterBox(popupBox, loadingSpinner);
 		popupVisible = true;
 	};
 
-	QuickSlideConfig = QuickSlideConfig || {};
-
-	// Preload 'loading' spinner image.
-	loadingSpinner.src = QuickSlideConfig.loading_spinner_url ||
-		"images/loading-spinner.gif";
-
-	popupBox.appendChild(loadingSpinner);
-	popupBox.className = "quickslide-popup-box";
-
-	addListener(popupBox, "click", function (e) {
-		// Close popup and put the spinner back in place ready for next popup.
-		popupBox.removeChild(popupImg);
-		popupBox.appendChild(loadingSpinner);
-		document.body.removeChild(popupBox);
-		popupVisible = false;
-	});
-
-	addListener(popupImg, "load", function (e) {
-		// Handler for when the full-sized image finishes loading.
-		var s = popupBox.style, cw, ch;
-
-		// Remove spinner and show actual image, then recenter the popup.
-		popupBox.removeChild(loadingSpinner);
-		popupBox.appendChild(popupImg);
+	recenterBox = function (box, srcImg) {
+		// Puts the popup box in the centre of the window, based on the size of
+		// the given image. If the image is larger than the window it is scaled
+		// down to fit.
+		var s = box.style, cw, ch;
 
 		// Get size of browser window.
 		if (document.documentElement && document.documentElement.offsetWidth) {
@@ -131,14 +121,67 @@
 		// necessary.
 		ch -= document.body.scrollTop;
 
-		s.width = popupImg.width + "px";
-		s.height = popupImg.height + "px";
-		s.top = (Math.round((ch - popupImg.height - 40) / 2) +
+		if (config.auto_fit) {
+			if (srcImg.width > cw - 25) {
+				console.log("too wide:", srcImg.width, cw);
+				srcImg.width = cw - 25;
+			}
+
+			if (srcImg.height > ch - 40) {
+				console.log("too high:", srcImg.height, ch);
+				srcImg.height = ch - 40;
+			}
+		}
+
+		s.width = srcImg.width + "px";
+		s.height = srcImg.height + "px";
+		s.top = (Math.round((ch - srcImg.height - 40) / 2) +
 			document.body.scrollTop) + "px";
-		s.left = Math.round((cw - popupImg.width) / 2) + "px";
+		s.left = Math.round((cw - srcImg.width) / 2) + "px";
+	};
+
+	config = config || {};
+
+	// Preload 'loading' spinner image.
+	loadingSpinner.src = config.loading_spinner_url ||
+		"images/loading-spinner.gif";
+
+	popupBox.appendChild(loadingSpinner);
+	popupBox.className = "quickslide-popup-box";
+
+	addListener(popupBox, "click", function (e) {
+		// Close popup and put the spinner back in place ready for next popup.
+
+		// A DOM exception is raised if popupImg is not a child of popupBox. We
+		// will just ignore it.
+		try {
+			popupBox.removeChild(popupImg);
+		} catch (err) {}
+
+		popupBox.appendChild(loadingSpinner);
+		document.body.removeChild(popupBox);
+		popupVisible = false;
+	});
+
+	addListener(popupImg, "load", function (e) {
+		// Handler for when the full-sized image finishes loading.
+		var mw = config.max_width, mh = config.max_height;
+		popupBox.removeChild(loadingSpinner);
+
+		if (mw && popupImg.width > mw) {
+			popupImg.width = mw;
+		}
+
+		if (mh && popupImg.height > mh) {
+			popupImg.height = mh;
+		}
+
+		popupBox.appendChild(popupImg);
+
+		recenterBox(popupBox, popupImg);
 	});
 
 	addListener(window, "load", function () {
 		setupGalleryLinks();
 	});
-}());
+}(QuickSlideConfig));

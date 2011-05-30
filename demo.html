@@ -8,8 +8,7 @@
 
 	<body>
 		<h1>QuickSlide</h1>
-		<p class="intro">QuickSlide is a popup image viewer.</p>
-		<p>Adding it to a page is simple:
+		<p>QuickSlide is a popup image viewer. Adding it to a page is simple:
 		<ol>
 			<li>
 				<p>Include the <code>quickslide.js</code> file at the bottom of your
@@ -17,16 +16,12 @@
 				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
 			</li>
 			<li>
-				<p>Mark your thumbnail image links with <code>rel="quickslide"</code>:</p>
-
-<pre><code>&lt;a href="myphoto_big.jpg" <em>rel="quickslide"</em>&gt;
-  &lt;img src="myphoto_thumb.jpg"&gt;
-&lt;/a&gt;</code></pre>
-			</li>
-			<li>
-			Add a <code>quickslide</code> class to a parent element:
+			Add a <code>quickslide</code> class to a parent element of the image
+			links:
 <pre><code>&lt;div class="gallery-container <em>quickslide</em>"&gt;
-  &lt;!-- thumbnail image links go here --&gt;
+  &lt;a href="photo1_big.jpg"&gt;&lt;img src="photo1_thumb.jpg"&gt;&lt;/a&gt;
+  &lt;a href="photo2_big.jpg"&gt;&lt;img src="photo2_thumb.jpg"&gt;&lt;/a&gt;
+  &lt;!-- etc. --&gt;
 &lt;/div&gt;</code></pre>
 			</li>
 		</ol>
@@ -45,6 +40,11 @@
 			<a href="images/totoro_b.jpg"><img src="images/totoro_t.jpg"/>Totoro</a>
 		</div>
 
+		<script>
+			var QuickSlideConfig = {
+				auto_fit: true
+			};
+		</script>
 		<script src="quickslide.js"></script>
 	</body>
 </html>

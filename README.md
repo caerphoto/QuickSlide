@@ -1,5 +1,3 @@
-##Note: QuickSlide doesn't actually do anything useful yet :-)
-
 #QuickSlide
 
 QuickSlide is a simple JavaScript popup image viewer, ideal for lightweight
@@ -11,14 +9,11 @@ Adding it to a page is simple:
 
         <script src="quickslide.js"></script>
 
-2. Mark your thumbnail image links with `rel="quickslide"`:
-
-        <a href="myphoto_big.jpg" rel="quickslide">
-            <img src="myphoto_thumb.jpg">
-        </a>
-
-3. Add the `quickslide` class to a parent element:
+2. Add the `quickslide` class to a parent element of the image links:
 
         <div class="gallery-container quickslide">
-          <!-- thumbnail image links go here -->
+          <a href="photo1_big.jpg"><img src="photo1_thumb.jpg"></a>
+          <a href="photo2_big.jpg"><img src="photo2_thumb.jpg"></a>
+          <a href="photo3_big.jpg"><img src="photo3_thumb.jpg"></a>
+          <!-- etc. -->
         </div>
