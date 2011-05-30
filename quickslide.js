@@ -128,6 +128,7 @@ var QuickSlideConfig;
 
 	popupBox.appendChild(loadingSpinner);
 	popupBox.className = "quickslide-popup-box";
+	popupBox.style.position = "absolute";
 
 	addListener(popupBox, "click", function (e) {
 		// Close popup and put the spinner back in place ready for next popup.
