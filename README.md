@@ -25,3 +25,5 @@ There are a few options you can specify to control the behaviour of the popups. 
     QuickSlideConfig = { max_width: 800, max_height: 600, auto_fit: true }
     </script>
 
+The three options specified in this example are currently the only ones
+available.
