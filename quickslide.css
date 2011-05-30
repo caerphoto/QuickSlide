@@ -4,7 +4,6 @@
 	border-style: solid;
 	border-color: #FFF #CCC #CCC #FFF;
 	padding: 10px;
-	position: absolute;
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 	border-radius: 5px;
 }

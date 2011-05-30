@@ -106,28 +106,43 @@ var QuickSlideConfig;
 		// Puts the popup box in the centre of the window, based on the size of
 		// the given image. If the image is larger than the window it is scaled
 		// down to fit.
-		var s = box.style, cw, ch, scrollTop = document.body.scrollTop ||
-				(document.documentElement && document.documentElement.scrollTop);
+		var bs = box.style, cw, ch, scrollTop = document.body.scrollTop ||
+				(document.documentElement && document.documentElement.scrollTop),
+			px, py, w, h, s;
 
 		// Get size of browser window.
 		cw = document.documentElement.clientWidth;
 		ch = document.documentElement.clientHeight;
 
+		w = srcImg.width;
+		h = srcImg.height;
+
+		// Calculate how much space the box's padding and borders take up.
+		px = box.offsetWidth - w;
+		py = box.offsetHeight - h;
+
+		// Scale image to fit in window, taking its container box's borders and
+		// padding into account.
 		if (config.auto_fit) {
-			if (srcImg.width > cw - 25) {
-				srcImg.width = cw - 25;
+			if (w + px > cw) {
+				s = cw / w;
+				w = w * s;
+				h = h * s;
 			}
 
-			if (srcImg.height > ch - 40) {
-				srcImg.height = ch - 40;
+			if (h + py > ch) {
+				s = ch / h;
+				w = w * s;
+				h = h * s;
 			}
 		}
 
-		s.width = srcImg.width + "px";
-		s.height = srcImg.height + "px";
-		s.top = (Math.round((ch - srcImg.height - 40) / 2) +
-			scrollTop) + "px";
-		s.left = Math.round((cw - srcImg.width) / 2) + "px";
+		// No need to set size of box, as it fits itself to the image.
+		srcImg.setAttribute("width", w - px);
+		srcImg.setAttribute("height", h - py);
+
+		bs.top = (Math.round((ch - h) / 2) + scrollTop) + "px";
+		bs.left = Math.round((cw - w) / 2) + "px";
 	};
 
 	config = config || {};
@@ -158,22 +173,29 @@ var QuickSlideConfig;
 
 	popupLoaded = function () {
 		// Handler for when the full-sized image finishes loading.
-		var w, h, mw = config.max_width, mh = config.max_height;
+		var w, h, mw = config.max_width, mh = config.max_height, s;
+
 		popupBox.removeChild(loadingSpinner);
 
 		w = popupImg.width;
 		h = popupImg.height;
 
-		if (mw && popupImg.width > mw) {
-			w = mw;
+		// Similar to calculations for fitting to window, but these don't need
+		// to take box padding/borders into account.
+		if (mw && w > mw) {
+			s = mw / w;
+			w = w * s;
+			h = h * s;
 		}
 
-		if (mh && popupImg.height > mh) {
-			h = mh;
+		if (mh && h > mh) {
+			s = mh / h;
+			w = w * s;
+			h = h * s;
 		}
 
-		popupImg.setAttribute("width", "" + w);
-		popupImg.setAttribute("height", "" + h);
+		popupImg.setAttribute("width", w);
+		popupImg.setAttribute("height", h);
 
 		popupBox.appendChild(popupImg);
 
