@@ -1,11 +1,17 @@
 .quickslide-popup-box {
 	background-color: #EEE;
-	border: 1px solid #CCC;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #FFF #CCC #CCC #FFF;
 	padding: 10px;
 	position: absolute;
+	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .quickslide-popup-box img {
 	display: block;
 	margin-bottom: 10px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #E0E0E0 #F4F4F4 #F4F4F4 #E0E0E0;
 }
