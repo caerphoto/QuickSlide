@@ -93,7 +93,11 @@ var QuickSlideConfig;
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
-		addListener(popupImg, "load", popupLoaded);
+		addListener(popupImg, "load", function () {
+			setTimeout(function () {
+				popupLoaded();
+			}, 1500);
+		});
 
 		// Need to set .src after attaching event listener, otherwise IE8 fails
 		// to trigger the "load" event when loading from the cache, since the
@@ -125,23 +129,23 @@ var QuickSlideConfig;
 		// padding into account.
 		if (config.auto_fit) {
 			if (w + px > cw) {
-				s = cw / w;
+				s = cw / (w + px);
 				w = w * s;
 				h = h * s;
 			}
 
 			if (h + py > ch) {
-				s = ch / h;
+				s = ch / (h + py);
 				w = w * s;
 				h = h * s;
 			}
 		}
 
 		// No need to set size of box, as it fits itself to the image.
-		srcImg.setAttribute("width", w - px);
-		srcImg.setAttribute("height", h - py);
+		srcImg.setAttribute("width", Math.round(w));
+		srcImg.setAttribute("height", Math.round(h));
 
-		bs.top = (Math.round((ch - h) / 2) + scrollTop) + "px";
+		bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
 		bs.left = Math.round((cw - w) / 2) + "px";
 	};
 
