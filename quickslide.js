@@ -125,18 +125,20 @@ var QuickSlideConfig;
 		// padding into account.
 		if (config.auto_fit) {
 			if (w + px > cw) {
-				srcImg.style.maxWidth = (w - px) + "px";
-				console.log("w - px:", w - px);
+				h = Math.round(h * (cw - px) / w);
+				w = cw - px;
+				srcImg.style.maxWidth = w + "px";
 			}
 
 			if (h + py > ch) {
-				srcImg.style.maxHeight = (h - py) + "px";
-				console.log("h - py:", h - py);
+				w = Math.round(w * (ch - py) / h);
+				h = ch - py;
+				srcImg.style.maxHeight = (ch - py) + "px";
 			}
 		}
 
 		bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
-		bs.left = Math.round((cw - w) / 2) + "px";
+		bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
 	};
 
 	config = config || {};
@@ -178,12 +180,10 @@ var QuickSlideConfig;
 		// to take box padding/borders into account.
 		if (mw && w > mw) {
 			popupImg.style.maxWidth = mw + "px";
-			console.log("mw:", mw);
 		}
 
 		if (mh && h > mh) {
 			popupImg.style.maxHeight = mh + "px";
-			console.log("mh:", mh);
 		}
 
 
