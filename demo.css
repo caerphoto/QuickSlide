@@ -11,12 +11,17 @@ a {
 	color: #8B8;
 }
 
+a:visited {
+	color: #ABA;
+}
+
 a:hover {
 	color: #BDB;
 }
 
-a:visited {
-	color: #ABA;
+dfn {
+	border-bottom: 1px dotted #CCC;
+	cursor: help;
 }
 
 code { padding: 5px 5px 2px 5px; }

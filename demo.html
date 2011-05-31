@@ -16,19 +16,28 @@
 				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
 			</li>
 			<li>
-				<p>Add <code>rel="quickslide"</code> to any links you want to convert
-				to popups:</p>
+				<p>Add <code>rel="quickslide"</code> to any links you want converted to
+				popups:</p>
+
 <pre><code class="de-em">&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
   &lt;img src="images/buslane_t.jpg"&gt;Bus Lane
 &lt;/a&gt;
 </code></pre>
+				<p>Make sure these links point to images, otherwise QuickSlide will get
+				confused.</p>
+
 			</li>
 		</ol>
+		<p>That's it! QuickSlide is designed to be an unobtrusive, progressive
+		enhancement to existing pages: it won't interfere with other JavaScript
+		widgets or libraries, and your page won't break if for some reaon the code
+		fails to load.</p>
 
 		<h2>Configuration</h2>
 		<p>There are a few options you can specify to control the behaviour of the
-		popups. They are set using a <kbd>&lt;script&gt;</kbd> anywhere before the inclusion
-		of the main <kbd>quickslide.js</kbd> file, like so:</p>
+		popups. They are set using a <kbd>&lt;script&gt;</kbd> tag anywhere before
+		the inclusion of the main <kbd>quickslide.js</kbd> file, like so:</p>
+
 <pre><code class="de-em"><em>&lt;script&gt;
 QuickSlideConfig = {
   loading_spinner_url: "loading-spinner.gif",
