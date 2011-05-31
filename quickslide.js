@@ -158,9 +158,9 @@ var QuickSlideConfig;
 		}
 
 		if (config.absolute_position) {
-			bs.top = (Math.round((ch - h) / 2) - (py / 2)) + "px";
-		} else {
 			bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
+		} else {
+			bs.top = (Math.round((ch - h) / 2) - (py / 2)) + "px";
 		}
 		bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
 	};
