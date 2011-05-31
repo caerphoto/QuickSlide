@@ -157,7 +157,7 @@ var QuickSlideConfig;
 			console.log("Window height:", ch);
 		}
 
-		if (config.fixed_position) {
+		if (config.absolute_position) {
 			bs.top = (Math.round((ch - h) / 2) - (py / 2)) + "px";
 		} else {
 			bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";

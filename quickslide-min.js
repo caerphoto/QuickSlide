@@ -8,6 +8,6 @@ if(mh&&h>mh){w=Math.round(w*mh/h);h=mh;srcImg.style.maxHeight=mh+"px";}
 px=box.offsetWidth-w;py=box.offsetHeight-h;if(config.auto_fit){if(w+px>cw){h=Math.round(h*(cw-px)/w);w=cw-px;srcImg.style.maxWidth=w+"px";}
 if(h+py>ch){w=Math.round(w*(ch-py)/h);h=ch-py;srcImg.style.maxHeight=(ch-py)+"px";}}
 if(log){console.log("Image height:",h);console.log("Scroll pos:",scrollTop);console.log("Window height:",ch);}
-if(config.fixed_position){bs.top=(Math.round((ch-h)/2)-(py/2))+"px";}else{bs.top=(Math.round((ch-h)/2)+scrollTop-(py/2))+"px";}
+if(config.absolute_position){bs.top=(Math.round((ch-h)/2)-(py/2))+"px";}else{bs.top=(Math.round((ch-h)/2)+scrollTop-(py/2))+"px";}
 bs.left=(Math.round((cw-w)/2)-px/2)+"px";};config=config||{};loadingSpinner.src=config.loading_spinner_url||"loading-spinner.gif";popupBox.appendChild(loadingSpinner);popupBox.className="quickslide-popup-box";popupBox.style.position=config.absolute_position?"absolute":"fixed";addListener(popupBox,"click",function(e){try{popupBox.removeChild(popupImg);}catch(err){}
 popupImg.src="";popupBox.appendChild(loadingSpinner);document.body.removeChild(popupBox);popupVisible=false;});popupLoaded=function(){popupBox.removeChild(loadingSpinner);popupBox.appendChild(popupImg);recenterBox(popupBox,popupImg);};addListener(window,"load",function(){setupGalleryLinks();});}(QuickSlideConfig));
