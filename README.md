@@ -18,7 +18,7 @@ There are a few options you can specify to control the behaviour of the popups. 
 
     <script>
     QuickSlideConfig = {
-      loading_spinner_url = "loading-spinner.gif",
+      loading_spinner_url: "loading-spinner.gif",
       max_width: 800,
       max_height: 600,
       auto_fit: true }

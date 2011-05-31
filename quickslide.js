@@ -125,21 +125,15 @@ var QuickSlideConfig;
 		// padding into account.
 		if (config.auto_fit) {
 			if (w + px > cw) {
-				s = cw / (w + px);
-				w = w * s;
-				h = h * s;
+				srcImg.style.maxWidth = (w - px) + "px";
+				console.log("w - px:", w - px);
 			}
 
 			if (h + py > ch) {
-				s = ch / (h + py);
-				w = w * s;
-				h = h * s;
+				srcImg.style.maxHeight = (h - py) + "px";
+				console.log("h - py:", h - py);
 			}
 		}
-
-		// No need to set size of box, as it fits itself to the image.
-		srcImg.setAttribute("width", Math.round(w));
-		srcImg.setAttribute("height", Math.round(h));
 
 		bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
 		bs.left = Math.round((cw - w) / 2) + "px";
@@ -183,19 +177,15 @@ var QuickSlideConfig;
 		// Similar to calculations for fitting to window, but these don't need
 		// to take box padding/borders into account.
 		if (mw && w > mw) {
-			s = mw / w;
-			w = w * s;
-			h = h * s;
+			popupImg.style.maxWidth = mw + "px";
+			console.log("mw:", mw);
 		}
 
 		if (mh && h > mh) {
-			s = mh / h;
-			w = w * s;
-			h = h * s;
+			popupImg.style.maxHeight = mh + "px";
+			console.log("mh:", mh);
 		}
 
-		popupImg.setAttribute("width", w);
-		popupImg.setAttribute("height", h);
 
 		popupBox.appendChild(popupImg);
 
