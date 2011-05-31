@@ -108,7 +108,7 @@ var QuickSlideConfig;
 		// down to fit.
 		var bs = box.style, cw, ch, scrollTop = document.body.scrollTop ||
 				(document.documentElement && document.documentElement.scrollTop),
-			px, py, w, h, s;
+			px, py, w, h, s, mw = config.max_width, mh = config.max_height;
 
 		// Get size of browser window.
 		cw = document.documentElement.clientWidth;
@@ -116,6 +116,20 @@ var QuickSlideConfig;
 
 		w = srcImg.width;
 		h = srcImg.height;
+
+		// Similar to calculations for fitting to window, but these don't need
+		// to take box padding/borders into account.
+		if (mw && w > mw) {
+			h = Math.round(h * mw / w);
+			w = mw;
+			srcImg.style.maxWidth = mw + "px";
+		}
+
+		if (mh && h > mh) {
+			w = Math.round(w * mh / h);
+			h = mh;
+			srcImg.style.maxHeight = mh + "px";
+		}
 
 		// Calculate how much space the box's padding and borders take up.
 		px = box.offsetWidth - w;
@@ -169,24 +183,8 @@ var QuickSlideConfig;
 
 	popupLoaded = function () {
 		// Handler for when the full-sized image finishes loading.
-		var w, h, mw = config.max_width, mh = config.max_height, s;
 
 		popupBox.removeChild(loadingSpinner);
-
-		w = popupImg.width;
-		h = popupImg.height;
-
-		// Similar to calculations for fitting to window, but these don't need
-		// to take box padding/borders into account.
-		if (mw && w > mw) {
-			popupImg.style.maxWidth = mw + "px";
-		}
-
-		if (mh && h > mh) {
-			popupImg.style.maxHeight = mh + "px";
-		}
-
-
 		popupBox.appendChild(popupImg);
 
 		recenterBox(popupBox, popupImg);

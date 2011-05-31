@@ -68,5 +68,5 @@ p.intro {
 
 .gallery a img {
 	display: block;
-	margin-bottom: 0.5em;
+	margin: 0 auto 0.5em auto;
 }
