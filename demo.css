@@ -36,8 +36,10 @@ pre {
 
 code { padding: 3px 5px; }
 
+code.de-em { color: #686; }
+
 code em {
-	color: #AAF;
+	color: #BDB;
 	font-style: normal;
 }
 

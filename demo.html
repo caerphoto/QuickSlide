@@ -11,15 +11,15 @@
 		<p>QuickSlide is a basic popup image viewer. Adding it to a page is easy:
 		<ol>
 			<li>
-				<p>Include the <code>quickslide.js</code> file at the bottom of your
+				<p>Include the <kbd>quickslide.js</kbd> file at the bottom of your
 				page:</p>
 				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
 			</li>
 			<li>
 				<p>Add <code>rel="quickslide"</code> to any links you want to convert
 				to popups:</p>
-<pre><code>&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
-  &lt;img src="images/buslane_t.jpg"/&gt;Bus Lane
+<pre><code class="de-em">&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
+  &lt;img src="images/buslane_t.jpg"&gt;Bus Lane
 &lt;/a&gt;
 </code></pre>
 			</li>
@@ -27,15 +27,17 @@
 
 		<h2>Configuration</h2>
 		<p>There are a few options you can specify to control the behaviour of the
-		popups. They are set using a &lt;script&gt; anywhere before the inclusion
-		of the main <code>quickslide.js</code> file, like so:</p>
-<pre><code>&lt;script&gt;
+		popups. They are set using a <kbd>&lt;script&gt;</kbd> anywhere before the inclusion
+		of the main <kbd>quickslide.js</kbd> file, like so:</p>
+<pre><code class="de-em"><em>&lt;script&gt;
 QuickSlideConfig = {
   loading_spinner_url = "loading-spinner.gif",
   max_width: 800,
   max_height: 600,
-  auto_fit: true }
-&lt;/script&gt;
+  auto_fit: true };
+&lt;/script&gt;</em>
+
+<span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
 </code></pre>
 
 		<p> The four options specified in this example are currently the only ones
@@ -86,8 +88,9 @@ QuickSlideConfig = {
 
 		<script>
 			var QuickSlideConfig = {
-				auto_fit: true
-			};
+				max_width: 300,
+				max_height: 300,
+				auto_fit: true };
 		</script>
 		<script src="quickslide.js"></script>
 	</body>
