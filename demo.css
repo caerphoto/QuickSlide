@@ -5,7 +5,6 @@ body {
 	line-height: 1.5;
 	margin: 1em auto;
 	width: 50em;
-	overflow-y: scroll;
 }
 
 a {
@@ -19,6 +18,8 @@ a:hover {
 a:visited {
 	color: #ABA;
 }
+
+code { padding: 5px 5px 2px 5px; }
 
 code, pre {
 	background-color: #111;
@@ -34,7 +35,6 @@ pre {
 	max-width: 80ex;
 }
 
-code { padding: 3px 5px; }
 
 code.de-em { color: #686; }
 
@@ -51,6 +51,10 @@ ol {
 
 p.intro {
 	font-weight: bold;
+}
+
+li {
+	margin-bottom: 1em;
 }
 
 .gallery a {

@@ -34,22 +34,43 @@ QuickSlideConfig = {
   loading_spinner_url: "loading-spinner.gif",
   max_width: 800,
   max_height: 600,
+  absolute_position: true,
   auto_fit: true };
 &lt;/script&gt;</em>
 
 <span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
 </code></pre>
 
-		<p> The four options specified in this example are currently the only ones
-		available.</p>
+		<p> The options specified in this example are currently the only ones
+		available. An explanation of the options:</p>
+		<ul>
+			<li><code>loading_spinner_url</code>: a string containing the URL for
+			an image to use as a placeholder while the full image loads. It doesn't
+			have to be an animation &ndash; you can use any valid image you want.
+			Default is <code>"loading-spinner.gif"</code>.</li>
+
+			<li><code>max_width, max_height</code>: dimensions are in pixels.
+			Specifying either will constrain the popup image to that size,
+			maintaining aspect ratio. You can specify both. No default.</li>
+
+			<li><code>absolute_position</code>: set to <code>true</code> to make the
+			popup scroll with the document. Default is <code>false</code>, which
+			means the popup stays in the centre of the browser window even when you
+			scroll up or down (i.e. it is displayed with <code>position: fixed</code>
+			style).</li>
+
+			<li><code>auto_fit</code>: set this to <code>true</code> to prevent
+			popups from being larger than the browser window. Default is
+			<code>false</code>.</li>
+		</ul>
 
 		<h2>Download</h2>
 		<ul>
-			<li><a href="quickslide.zip">quickslide.zip</a> (6.5KB) &ndash; contains
+			<li><a href="quickslide.zip">quickslide.zip</a> (6.6KB) &ndash; contains
 			a minified and a normal version of the code, a small loading spinner
 			image, and a sample CSS file (the <a href="quickslide.css">same one</a>
 			as used on this page).</li>
-			<li><a href="quickslide-min.js">quickslide-min.js</a> (2.9KB) &ndash; just
+			<li><a href="quickslide-min.js">quickslide-min.js</a> (3.2KB) &ndash; just
 			the minified JavaScript code.</li>
 		</ul></p>
 

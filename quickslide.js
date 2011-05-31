@@ -102,7 +102,7 @@ var QuickSlideConfig;
 		popupVisible = true;
 	};
 
-	recenterBox = function (box, srcImg) {
+	recenterBox = function (box, srcImg, log) {
 		// Puts the popup box in the centre of the window, based on the size of
 		// the given image. If the image is larger than the window it is scaled
 		// down to fit.
@@ -111,8 +111,8 @@ var QuickSlideConfig;
 			px, py, w, h, s, mw = config.max_width, mh = config.max_height;
 
 		// Get size of browser window.
-		cw = document.documentElement.clientWidth;
-		ch = document.documentElement.clientHeight;
+		cw = window.innerWidth || document.documentElement.clientWidth;
+		ch = window.innerHeight || document.documentElement.clientHeight;
 
 		w = srcImg.width;
 		h = srcImg.height;
@@ -151,7 +151,17 @@ var QuickSlideConfig;
 			}
 		}
 
-		bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
+		if (log) {
+			console.log("Image height:", h);
+			console.log("Scroll pos:", scrollTop);
+			console.log("Window height:", ch);
+		}
+
+		if (config.fixed_position) {
+			bs.top = (Math.round((ch - h) / 2) - (py / 2)) + "px";
+		} else {
+			bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
+		}
 		bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
 	};
 
@@ -163,7 +173,7 @@ var QuickSlideConfig;
 
 	popupBox.appendChild(loadingSpinner);
 	popupBox.className = "quickslide-popup-box";
-	popupBox.style.position = "absolute";
+	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
 
 	addListener(popupBox, "click", function (e) {
 		// Close popup and put the spinner back in place ready for next popup.
