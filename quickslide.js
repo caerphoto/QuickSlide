@@ -8,14 +8,16 @@ var QuickSlideConfig;
 		loadingSpinner = document.createElement("img"),
 		popupImg,
 		popupBox = document.createElement("div"),
+		dimmer, ds,
+		// Not used yet:
 		popupNext, popupPrev,
 
 		// Functions:
 		normalizeEvent, addListener, triggerEvent,
-		setupGalleryLinks, setPopup, getLinkNodes, recenterBox, popupLoaded;
+		setupGalleryLinks, setPopup, recenterBox, imageLoaded, hidePopup;
 
-	// Couple of convenience functions for dealing with events.
 	normalizeEvent = function (e) {
+		// Make the event object standard within event handlers.
 		if (!e.stopPropagation) {
 			e.stopPropagation = function () {
 				this.cancelBubble = true;
@@ -34,6 +36,7 @@ var QuickSlideConfig;
 	};
 
 	addListener = function (node, type, handler) {
+		// Cross-browser event handler binding.
 		var wrapHandler = function (e) {
 			// Make 'this' inside the handler refer to the 'node' parameter.
 			handler.apply(node, [normalizeEvent(e || window.event)]);
@@ -51,6 +54,7 @@ var QuickSlideConfig;
 	};
 
 	triggerEvent = function (node, type) {
+		// Cross-browser event triggering.
 		var evt;
 
 		if (document.createEventObject) {
@@ -66,46 +70,24 @@ var QuickSlideConfig;
 	};
 
 	setupGalleryLinks = function () {
+		// Assign click event handlers to each link with the appropriate rel
+		// attribute.
 		var galleryLinks, i, len;
 
 		galleryLinks = document.querySelectorAll("a[rel=quickslide]");
 
-		// Assign a separate click handler for each gallery, so that the
-		// handler will loop through only the links in its gallery.
 		for (i = 0, len = galleryLinks.length; i < len; i += 1) {
 			addListener(galleryLinks[i], "click", function (e) {
 				e.preventDefault();
-				if (popupVisible) {
-					triggerEvent(popupBox, "click");
-				}
 				setPopup(this);
 			});
 		}
 	};
 
-	setPopup = function (fromNode) {
-		document.body.appendChild(popupBox);
-		popupBox.appendChild(loadingSpinner);
-		recenterBox(popupBox, loadingSpinner);
-
-		// Need to create a new image because if we just change the .src
-		// property, IE9 doesn't update the width and height once the new image
-		// loads, so all images display at the same size as the first one to be
-		// opened.
-		popupImg = new Image();
-		addListener(popupImg, "load", popupLoaded);
-
-		// Need to set .src after attaching event listener, otherwise IE8 fails
-		// to trigger the "load" event when loading from the cache, since the
-		// image gets loaded before the assigning of the event handler.
-		popupImg.src = fromNode.href;
-		popupVisible = true;
-	};
-
 	recenterBox = function (box, srcImg, log) {
 		// Puts the popup box in the centre of the window, based on the size of
 		// the given image. If the image is larger than the window it is scaled
-		// down to fit.
+		// down to fit, if that option is specified in config.
 		var bs = box.style, cw, ch, scrollTop = document.body.scrollTop ||
 				(document.documentElement && document.documentElement.scrollTop),
 			px, py, w, h, s, mw = config.max_width, mh = config.max_height;
@@ -122,13 +104,17 @@ var QuickSlideConfig;
 		if (mw && w > mw) {
 			h = Math.round(h * mw / w);
 			w = mw;
+			// Need to specify max in both dimensions otherwise IE8 doesn't
+			// scale the image proportionally.
 			srcImg.style.maxWidth = mw + "px";
+			srcImg.style.maxHeight = h + "px";
 		}
 
 		if (mh && h > mh) {
 			w = Math.round(w * mh / h);
 			h = mh;
 			srcImg.style.maxHeight = mh + "px";
+			srcImg.style.maxWidth = w + "px";
 		}
 
 		// Calculate how much space the box's padding and borders take up.
@@ -142,19 +128,21 @@ var QuickSlideConfig;
 				h = Math.round(h * (cw - px) / w);
 				w = cw - px;
 				srcImg.style.maxWidth = w + "px";
+				srcImg.style.maxHeight = h + "px";
 			}
 
 			if (h + py > ch) {
 				w = Math.round(w * (ch - py) / h);
 				h = ch - py;
-				srcImg.style.maxHeight = (ch - py) + "px";
+				srcImg.style.maxHeight = h + "px";
+				srcImg.style.maxWidth = w + "px";
 			}
 		}
 
 		if (log) {
-			console.log("Image height:", h);
-			console.log("Scroll pos:", scrollTop);
-			console.log("Window height:", ch);
+			console.log("Image height:   ", h);
+			console.log("Scroll position:", scrollTop);
+			console.log("Window height:  ", ch);
 		}
 
 		if (config.absolute_position) {
@@ -165,40 +153,93 @@ var QuickSlideConfig;
 		bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
 	};
 
+	setPopup = function (fromNode) {
+		// Prepare the image popup by first showing the loading spinner, then
+		// setting up an onload event handler, then loading the appropriate
+		// image.
+		try {
+			popupBox.replaceChild(loadingSpinner, popupImg);
+		} catch (err) {}
+
+		document.body.appendChild(popupBox);
+		recenterBox(popupBox, loadingSpinner);
+
+		// Need to create a new image because if we just change the .src
+		// property, IE9 doesn't update the width and height once the new image
+		// loads, so all images display at the same size as the first one to be
+		// opened.
+		popupImg = new Image();
+		addListener(popupImg, "load", imageLoaded);
+
+		// Need to set .src after attaching event listener, otherwise IE8 fails
+		// to trigger the "load" event when loading from the cache, since the
+		// image gets loaded before the assigning of the event handler.
+		popupImg.src = fromNode.href;
+	};
+
+	imageLoaded = function () {
+		// Handler for when the full-sized image finishes loading.
+		popupBox.replaceChild(popupImg, loadingSpinner);
+
+		if (config.use_dimmer) {
+			document.body.appendChild(dimmer);
+		}
+
+		recenterBox(popupBox, popupImg);
+		popupVisible = true;
+	};
+
+	hidePopup = function () {
+		// Close popup and put the spinner back in place ready for next popup.
+		popupImg.src = "";
+
+		// Image may not have finished loading when hidePopup() is called.
+		try {
+			popupBox.replaceChild(loadingSpinner, popupImg);
+		} catch (err) {}
+
+		document.body.removeChild(popupBox);
+		if (config.use_dimmer && popupVisible) {
+			document.body.removeChild(dimmer);
+		}
+
+		popupVisible = false;
+	};
+
+	/* Initialisation stuff *
+	 * -------------------- */
+
 	config = config || {};
 
 	// Preload 'loading' spinner image.
 	loadingSpinner.src = config.loading_spinner_url ||
 		"loading-spinner.gif";
 
-	popupBox.appendChild(loadingSpinner);
 	popupBox.className = "quickslide-popup-box";
+	popupBox.appendChild(loadingSpinner);
+
+	if (config.use_dimmer) {
+		dimmer = document.createElement("div");
+		ds = dimmer.style;
+		ds.position = "fixed";
+		ds.zIndex = "9998";
+		ds.top = "0";
+		ds.right = "0";
+		ds.bottom = "0";
+		ds.left = "0";
+		dimmer.id = "quickslide-dimmer";
+
+		addListener(dimmer, "click", function (e) {
+			hidePopup();
+		});
+	}
+
 	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
+	popupBox.style.zIndex = "9999";
 
 	addListener(popupBox, "click", function (e) {
-		// Close popup and put the spinner back in place ready for next popup.
-
-		// A DOM exception is raised if popupImg is not a child of popupBox. We
-		// will just ignore it.
-		try {
-			popupBox.removeChild(popupImg);
-		} catch (err) {}
-
-		popupImg.src = "";
-
-		popupBox.appendChild(loadingSpinner);
-		document.body.removeChild(popupBox);
-		popupVisible = false;
+		hidePopup();
 	});
-
-	popupLoaded = function () {
-		// Handler for when the full-sized image finishes loading.
-
-		popupBox.removeChild(loadingSpinner);
-		popupBox.appendChild(popupImg);
-
-		recenterBox(popupBox, popupImg);
-	};
 
 	addListener(window, "load", function () {
 		setupGalleryLinks();

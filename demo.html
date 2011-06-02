@@ -43,6 +43,7 @@ QuickSlideConfig = {
   loading_spinner_url: "loading-spinner.gif",
   max_width: 800,
   max_height: 600,
+  use_dimmer: true,
   absolute_position: true,
   auto_fit: true };
 &lt;/script&gt;</em>
@@ -62,6 +63,12 @@ QuickSlideConfig = {
 			Specifying either will constrain the popup image to that size,
 			maintaining aspect ratio. You can specify both. No default.</li>
 
+			<li><code>use_dimmer</code>: set to <code>true</code> to darken the rest
+			of the page when a popup is show. The dimmer is a <kbd>&lt;div&gt;</kbd>
+			with an ID of <code>quickslide-dimmer</code>. The <a href="quickslide.css"
+			>CSS file</a> used on this page contains a simple example of usage.
+			Default value for this option is <code>false</code>.</li>
+
 			<li><code>absolute_position</code>: set to <code>true</code> to make the
 			popup scroll with the document. Default is <code>false</code>, which
 			means the popup stays in the centre of the browser window even when you
@@ -75,11 +82,11 @@ QuickSlideConfig = {
 
 		<h2>Download</h2>
 		<ul>
-			<li><a href="quickslide.zip">quickslide.zip</a> (6.6KB) &ndash; contains
+			<li><a href="quickslide.zip">quickslide.zip</a> (6.2KB) &ndash; contains
 			a minified and a normal version of the code, a small loading spinner
 			image, and a sample CSS file (the <a href="quickslide.css">same one</a>
 			as used on this page).</li>
-			<li><a href="quickslide-min.js">quickslide-min.js</a> (3.2KB) &ndash; just
+			<li><a href="quickslide-min.js">quickslide-min.js</a> (3.7KB) &ndash; just
 			the minified JavaScript code.</li>
 		</ul></p>
 
@@ -123,6 +130,7 @@ QuickSlideConfig = {
 		<script>
 			var QuickSlideConfig = {
 				max_height: 500,
+				use_dimmer: true,
 				auto_fit: true };
 		</script>
 		<script src="quickslide.js"></script>
