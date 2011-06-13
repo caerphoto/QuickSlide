@@ -9,6 +9,7 @@ var QuickSlideConfig;
 		popupImg,
 		popupBox = document.createElement("div"),
 		dimmer, ds,
+		sizeTimer,
 		// Not used yet:
 		popupNext, popupPrev,
 
@@ -169,17 +170,26 @@ var QuickSlideConfig;
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
-		addListener(popupImg, "load", imageLoaded);
+		//addListener(popupImg, "load", imageLoaded);
+		addListener(popupImg, "error", function () {
+			alert("There was a problem loading the image.\n\nTrying again might help.");
+		});
 
 		// Need to set .src after attaching event listener, otherwise IE8 fails
 		// to trigger the "load" event when loading from the cache, since the
 		// image gets loaded before the assigning of the event handler.
 		popupImg.src = fromNode.href;
+		sizeTimer = setInterval(function () {
+			if (popupImg.width || popupImg.height) {
+				imageLoaded();
+			}
+		}, 200);
 	};
 
 	imageLoaded = function () {
 		// Handler for when the full-sized image finishes loading.
 		popupBox.replaceChild(popupImg, loadingSpinner);
+		clearInterval(sizeTimer);
 
 		if (config.use_dimmer) {
 			document.body.appendChild(dimmer);
