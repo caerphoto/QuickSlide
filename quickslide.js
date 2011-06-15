@@ -209,7 +209,10 @@ var QuickSlideConfig;
 		// Handler for when the full-sized image is ready to be shown in the
 		// popup.
 		clearInterval(sizeTimer);
-		popupBox.replaceChild(popupImg, loadingSpinner);
+		try {
+			popupBox.replaceChild(popupImg, loadingSpinner);
+		} catch (err) {}
+
 		if (config.show_caption) {
 			popupCaption.style.display = "";
 		}

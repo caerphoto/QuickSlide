@@ -12,7 +12,8 @@ bs.top=(Math.round((ch-h)/2)+
 (config.absolute_position?scrollTop:0)-
 (py/2))+"px";bs.left=(Math.round((cw-w)/2)-px/2)+"px";};setPopup=function(fromNode){try{popupBox.replaceChild(loadingSpinner,popupImg);}catch(err){}
 document.body.appendChild(popupBox);recenterBox(popupBox,loadingSpinner);popupImg=new Image();addListener(popupImg,"error",function(e){if(!popupImg.width&&!popupImg.height){alert("There was a problem loading the image.\n\nTrying again might help.");}});if(config.show_caption){popupCaption.style.display="none";popupCaption.innerHTML=fromNode.getAttribute("title");}
-popupImg.src=fromNode.getAttribute("href");sizeTimer=setInterval(function(){if(popupImg.width||popupImg.height){imageLoaded();}},200);};imageLoaded=function(){clearInterval(sizeTimer);popupBox.replaceChild(popupImg,loadingSpinner);if(config.show_caption){popupCaption.style.display="";}
+popupImg.src=fromNode.getAttribute("href");sizeTimer=setInterval(function(){if(popupImg.width||popupImg.height){imageLoaded();}},200);};imageLoaded=function(){clearInterval(sizeTimer);try{popupBox.replaceChild(popupImg,loadingSpinner);}catch(err){}
+if(config.show_caption){popupCaption.style.display="";}
 if(config.use_dimmer){document.body.appendChild(dimmer);}
 recenterBox(popupBox,popupImg);popupVisible=true;};hidePopup=function(){try{popupBox.replaceChild(loadingSpinner,popupImg);}catch(err){}
 document.body.removeChild(popupBox);if(config.use_dimmer&&popupVisible){document.body.removeChild(dimmer);}
