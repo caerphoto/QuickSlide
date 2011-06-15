@@ -41,7 +41,7 @@ The options specified in this example are currently the only ones available. An 
 
 * `absolute_position`: set to `true` to make the popup scroll with the document. Default is `false`, which means the popup stays in the centre of the browser window even when you scroll up or down (i.e. it is displayed with `position: fixed style`).
 
-* `auto_fit`: set this to `true` to prevent popups from being larger than the browser window. Default is `false`.
+* `auto_fit`: set this to `false` to allow popups to be larger than the browser window. Default is `true`.
 
 [CSS file]: http://caerphoto.com/quickslide/quickslide.css
-[demo page]: http://caerphoto.com/quickslide/demo.html
+[demo page]: http://caerphoto.com/quickslide/

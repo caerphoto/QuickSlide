@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>QuickSlide</title>
+		<link rel="stylesheet" href="demo.css">
+		<link rel="stylesheet" href="quickslide.css">
+	</head>
+
+	<body>
+		<h1>QuickSlide</h1>
+		<p>QuickSlide is a basic popup image viewer. Adding it to a page is easy:
+		<ol>
+			<li>
+				<p>Include the <kbd>quickslide.js</kbd> file at the bottom of your
+				page:</p>
+				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
+			</li>
+			<li>
+				<p>Add <code>rel="quickslide"</code> to any links you want converted to
+				popups:</p>
+
+<pre><code class="de-em">&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
+  &lt;img src="images/buslane_t.jpg"&gt;Bus Lane
+&lt;/a&gt;
+</code></pre>
+				<p>Make sure these links point to images, otherwise QuickSlide will get
+				confused.</p>
+
+			</li>
+		</ol>
+		<p>That's it! QuickSlide is designed to be an unobtrusive, progressive
+		enhancement to existing pages: it won't interfere with other JavaScript
+		widgets or libraries, and your page won't break if for some reaon the code
+		fails to load.</p>
+
+		<h2>Configuration</h2>
+		<p>There are a few options you can specify to control the behaviour of the
+		popups. They are set using a <kbd>&lt;script&gt;</kbd> tag anywhere before
+		the inclusion of the main <kbd>quickslide.js</kbd> file, like so:</p>
+
+<pre><code class="de-em"><em>&lt;script&gt;
+QuickSlideConfig = {
+  loading_spinner_url: "loading-spinner.gif",
+  max_width: 800,
+  max_height: 600,
+  use_dimmer: true,
+  absolute_position: true,
+  auto_fit: false };
+&lt;/script&gt;</em>
+
+<span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
+</code></pre>
+
+		<p> The options specified in this example are currently the only ones
+		available. An explanation of the options:</p>
+		<ul>
+			<li><code>loading_spinner_url</code>: a string containing the URL for
+			an image to use as a placeholder while the full image loads. It doesn't
+			have to be an animation &ndash; you can use any valid image you want.
+			Default is <code>"loading-spinner.gif"</code>.</li>
+
+			<li><code>max_width, max_height</code>: dimensions are in pixels.
+			Specifying either will constrain the popup image to that size,
+			maintaining aspect ratio. You can specify both. No default.</li>
+
+			<li><code>use_dimmer</code>: set to <code>true</code> to darken the rest
+			of the page when a popup is show. The dimmer is a <kbd>&lt;div&gt;</kbd>
+			with an ID of <code>quickslide-dimmer</code>. The <a href="quickslide.css"
+			>CSS file</a> used on this page contains a simple example of usage.
+			Default value for this option is <code>false</code>.</li>
+
+			<li><code>absolute_position</code>: set to <code>true</code> to make the
+			popup scroll with the document. Default is <code>false</code>, which
+			means the popup stays in the centre of the browser window even when you
+			scroll up or down (i.e. it is displayed with <code>position: fixed</code>
+			style).</li>
+
+			<li><code>auto_fit</code>: set this to <code>false</code> to allow popups
+			to be larger than the browser window. Default is <code>true</code>.</li>
+		</ul>
+
+		<h2>Download</h2>
+		<ul>
+			<li><a href="quickslide.zip">quickslide.zip</a> (6.2KB) &ndash; contains
+			a minified and a normal version of the code, a small loading spinner
+			image, and a sample CSS file (the <a href="quickslide.css">same one</a>
+			as used on this page).</li>
+			<li><a href="quickslide-min.js">quickslide-min.js</a> (3.7KB) &ndash; just
+			the minified JavaScript code.</li>
+		</ul></p>
+
+		<p>QuickSlide is also on <a href="https://github.com/caerphoto/QuickSlide">
+		GitHub</a>.</p>
+
+		<h2>Example</h2>
+		<p>Click thumbnails to show larger image; click large image to hide it
+		again.</p>
+
+		<div class="gallery">
+			<a href="images/buslane_b.jpg" rel="quickslide">
+				<img src="images/buslane_t.jpg"/>Bus Lane
+			</a>
+			<a href="images/cathedral_b.jpg" rel="quickslide">
+				<img src="images/cathedral_t.jpg"/>Cathedral
+			</a>
+			<a href="images/euston_b.jpg" rel="quickslide">
+				<img src="images/euston_t.jpg"/>Euston
+			</a>
+			<a href="images/gig_b.jpg" rel="quickslide">
+				<img src="images/gig_t.jpg"/>Gig
+			</a>
+			<a href="images/hedge_b.jpg" rel="quickslide">
+				<img src="images/hedge_t.jpg"/>Hedge
+			</a>
+			<a href="images/lucy_b.jpg" rel="quickslide">
+				<img src="images/lucy_t.jpg"/>Cat
+			</a>
+			<a href="images/snow_b.jpg" rel="quickslide">
+				<img src="images/snow_t.jpg"/>Snow
+			</a>
+			<a href="images/totoro_b.jpg" rel="quickslide">
+				<img src="images/totoro_t.jpg"/>Totoro
+			</a>
+			<a href="images/catroof_b.jpg" rel="quickslide">
+				<img src="images/catroof_t.jpg"/>Cat on Roof
+			</a>
+		</div>
+
+		<script>
+			var QuickSlideConfig = {
+				max_height: 500,
+				use_dimmer: true };
+		</script>
+		<script src="quickslide.js"></script>
+	</body>
+</html>
+
