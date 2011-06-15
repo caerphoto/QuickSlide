@@ -13,8 +13,12 @@ var QuickSlideConfig;
 		// Not used yet:
 		popupNext, popupPrev,
 
-		// Functions:
+		// These three are event normalisation functions based on examples in
+		// 'Eloquent JavaScript', by Marijn Haverbeke:
+		// http://eloquentjavascript.net/chapter13.html
 		normalizeEvent, addListener, triggerEvent,
+
+		// Other functions:
 		setupGalleryLinks, setPopup, recenterBox, imageLoaded, hidePopup;
 
 	normalizeEvent = function (e) {
@@ -155,9 +159,9 @@ var QuickSlideConfig;
 	};
 
 	setPopup = function (fromNode) {
-		// Prepare the image popup by first showing the loading spinner, then
-		// setting up an onload event handler, then loading the appropriate
-		// image.
+		// Prepare the image popup by inserting the loading spinner, showing
+		// the box centred, then creating a new image object and polling it to
+		// check whether it's started loading.
 		try {
 			popupBox.replaceChild(loadingSpinner, popupImg);
 		} catch (err) {}
@@ -170,6 +174,7 @@ var QuickSlideConfig;
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
+
 		// 'load' event listener removed because we now poll the image object
 		// to see whether it has a width/height, i.e. it has begun loading and
 		// can be shown in the popup box.
@@ -178,10 +183,11 @@ var QuickSlideConfig;
 		// Removed 'error' event listener because it pops up even for
 		// unimportant errors like wrong MIME type, and I can find no way to
 		// determine the nature of the error.
-		//addListener(popupImg, "error", function (e) {
-			//alert("There was a problem loading the image.\n\nTrying again might help.");
-			//console.dir(e);
-		//});
+		addListener(popupImg, "error", function (e) {
+			if (!popupImg.width && !popupImg.height) {
+				alert("There was a problem loading the image.\n\nTrying again might help.");
+			}
+		});
 
 		popupImg.src = fromNode.href;
 		sizeTimer = setInterval(function () {
@@ -192,9 +198,10 @@ var QuickSlideConfig;
 	};
 
 	imageLoaded = function () {
-		// Handler for when the full-sized image finishes loading.
-		popupBox.replaceChild(popupImg, loadingSpinner);
+		// Handler for when the full-sized image is ready to be shown in the
+		// popup.
 		clearInterval(sizeTimer);
+		popupBox.replaceChild(popupImg, loadingSpinner);
 
 		if (config.use_dimmer) {
 			document.body.appendChild(dimmer);
@@ -206,7 +213,9 @@ var QuickSlideConfig;
 
 	hidePopup = function () {
 		// Close popup and put the spinner back in place ready for next popup.
-		popupImg.src = "";
+
+		// Line commented out because it causes an error event on Windows.
+		//popupImg.src = "";
 
 		// Image may not have finished loading when hidePopup() is called.
 		try {
