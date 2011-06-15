@@ -23,7 +23,6 @@ There are a few options you can specify to control the behaviour of the popups. 
 
     <script>
     QuickSlideConfig = {
-      loading_spinner_url: "loading-spinner.gif",
       max_width: 800,
       max_height: 600,
       use_dimmer: true,
@@ -34,11 +33,9 @@ There are a few options you can specify to control the behaviour of the popups. 
 
 The options specified in this example are currently the only ones available. An explanation of the options:
 
-* `loading_spinner_url`: a string containing the URL for an image to use as a placeholder while the full image loads. It doesn't have to be an animation – you can use any valid image you want. Default is `"loading-spinner.gif"`.
-
 * `max_width, max_height`: dimensions are in pixels. Specifying either will constrain the popup image to that size, maintaining aspect ratio. You can specify both. No default.
 
-* `use_dimmer`: set to `true` to darken the rest of the page when a popup is show. The dimmer is a `<div>` with an ID of `quickslide-dimmer`. The [CSS file] used on the [demo page] contains a simple example of usage. Default value for this option is `false`.
+* `use_dimmer`: set to `true` to also create a fixed-position `<div>` in addition to the popup box itself. It has an ID of `#quickslide-dimmer`, is fixed-position and covers the whole window. Default value for this option is `false`.
 
 * `absolute_position`: set to `true` to make the popup scroll with the document. Default is `false`, which means the popup stays in the centre of the browser window even when you scroll up or down (i.e. it is displayed with `position: fixed style`).
 

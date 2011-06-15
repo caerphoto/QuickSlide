@@ -4,11 +4,10 @@
 var QuickSlideConfig;
 
 (function (config) {
-	var popupVisible = false,
-		loadingSpinner = document.createElement("img"),
+	var loadingSpinner = document.createElement("img"),
 		popupImg,
 		popupBox = document.createElement("div"),
-		dimmer, ds,
+		dimmer,
 		sizeTimer,
 		// Not used yet:
 		popupNext, popupPrev, popupCaption,
@@ -19,7 +18,7 @@ var QuickSlideConfig;
 		normalizeEvent, addListener, triggerEvent,
 
 		// Other functions:
-		setupGalleryLinks, setPopup, recenterBox, imageLoaded, hidePopup;
+		setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
 
 	normalizeEvent = function (e) {
 		// Make the event object standard within event handlers.
@@ -89,73 +88,76 @@ var QuickSlideConfig;
 		}
 	};
 
-	recenterBox = function (box, srcImg, log) {
+	recenterBox = function (box, srcImg) {
 		// Puts the popup box in the centre of the window, based on the size of
 		// the given image. If the image is larger than the window it is scaled
 		// down to fit, if that option is specified in config.
+		// If no image is given, position is based on the size of the empty box
+		// (including padding and border).
 		var bs = box.style, cw, ch, scrollTop = document.body.scrollTop ||
 				(document.documentElement && document.documentElement.scrollTop),
-			px, py, w, h, s, mw = config.max_width, mh = config.max_height;
+			px = 0, py = 0, w, h, cr,
+			mw = config.max_width, mh = config.max_height;
 
 		// Get size of browser window.
 		cw = window.innerWidth || document.documentElement.clientWidth;
 		ch = window.innerHeight || document.documentElement.clientHeight;
 
-		w = srcImg.width;
-		h = srcImg.height;
+		if (srcImg) {
+			w = srcImg.width;
+			h = srcImg.height;
 
-		// Similar to calculations for fitting to window, but these don't need
-		// to take box padding/borders into account.
-		if (mw && w > mw) {
-			h = Math.round(h * mw / w);
-			w = mw;
-			// Need to specify max in both dimensions otherwise IE8 doesn't
-			// scale the image proportionally.
-			srcImg.style.maxWidth = mw + "px";
-			srcImg.style.maxHeight = h + "px";
-		}
-
-		if (mh && h > mh) {
-			w = Math.round(w * mh / h);
-			h = mh;
-			srcImg.style.maxHeight = mh + "px";
-			srcImg.style.maxWidth = w + "px";
-		}
-
-		// Prevent caption being wider than image, as it looks wrong. May still
-		// look odd if auto_fit is enabled and the caption is really long
-		// (wider than the whole browser window).
-		if (config.show_caption) {
-			popupCaption.style.maxWidth = w + "px";
-		}
-
-		// Calculate how much space the box's padding, borders and caption take
-		// up.
-		px = box.offsetWidth - w;
-		py = box.offsetHeight - h;
-
-		// Scale image to fit in window, taking its container box's borders and
-		// padding into account.
-		if (config.auto_fit !== false) {
-			if (w + px > cw) {
-				h = Math.round(h * (cw - px) / w);
-				w = cw - px;
-				srcImg.style.maxWidth = w + "px";
+			// Similar to calculations for fitting to window, but these don't need
+			// to take box padding/borders into account.
+			if (mw && w > mw) {
+				h = Math.round(h * mw / w);
+				w = mw;
+				// Need to specify max in both dimensions otherwise IE8 doesn't
+				// scale the image proportionally.
+				srcImg.style.maxWidth = mw + "px";
 				srcImg.style.maxHeight = h + "px";
 			}
 
-			if (h + py > ch) {
-				w = Math.round(w * (ch - py) / h);
-				h = ch - py;
-				srcImg.style.maxHeight = h + "px";
+			if (mh && h > mh) {
+				w = Math.round(w * mh / h);
+				h = mh;
+				srcImg.style.maxHeight = mh + "px";
 				srcImg.style.maxWidth = w + "px";
 			}
-		}
 
-		if (log) {
-			console.log("Image height:   ", h);
-			console.log("Scroll position:", scrollTop);
-			console.log("Window height:  ", ch);
+			// Prevent caption being wider than image, as it looks wrong. May still
+			// look odd if auto_fit is enabled and the caption is really long
+			// (wider than the whole browser window).
+			if (config.show_caption) {
+				popupCaption.style.maxWidth = w + "px";
+			}
+
+			// Calculate how much space the box's padding, borders and caption take
+			// up.
+			px = box.offsetWidth - w;
+			py = box.offsetHeight - h;
+
+			// Scale image to fit in window, taking its container box's borders and
+			// padding into account.
+			if (config.auto_fit !== false) {
+				if (w + px > cw) {
+					h = Math.round(h * (cw - px) / w);
+					w = cw - px;
+					srcImg.style.maxWidth = w + "px";
+					srcImg.style.maxHeight = h + "px";
+				}
+
+				if (h + py > ch) {
+					w = Math.round(w * (ch - py) / h);
+					h = ch - py;
+					srcImg.style.maxHeight = h + "px";
+					srcImg.style.maxWidth = w + "px";
+				}
+			}
+		} else { // no image given
+			cr = box.getBoundingClientRect();
+			w = cr.right - cr.left;
+			h = cr.bottom - cr.top;
 		}
 
 		bs.top = (Math.round((ch - h) / 2) +
@@ -165,32 +167,35 @@ var QuickSlideConfig;
 	};
 
 	setPopup = function (fromNode) {
-		// Prepare the image popup by inserting the loading spinner, showing
-		// the box centred, then creating a new image object and polling it to
-		// check whether it's started loading.
-		try {
-			popupBox.replaceChild(loadingSpinner, popupImg);
-		} catch (err) {}
+		if (config.use_dimmer) {
+			document.body.appendChild(dimmer);
+		}
 
 		document.body.appendChild(popupBox);
-		recenterBox(popupBox, loadingSpinner);
+		popupBox.className = "loading";
+		recenterBox(popupBox);
+
+		// Throws an exception if popupImg is not a child of popupBox. This is
+		// much easier (and possibly quicker) than trying to determine if it's
+		// a child or not.
+		try {
+			popupBox.removeChild(popupImg);
+		} catch (err) {}
 
 		// Need to create a new image because if we just change the .src
 		// property, IE9 doesn't update the width and height once the new image
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
+		popupImg.id = "quickslide-image";
+		popupImg.style.display = "none";
 
 		addListener(popupImg, "error", function (e) {
 			if (!popupImg.width && !popupImg.height) {
-				alert("There was a problem loading the image.\n\nTrying again might help.");
+				alert("There was a problem loading the image.\n\nThe server might have taken too long to respond, or the image might have been deleted.");
+				hidePopup();
 			}
 		});
-
-		// 'load' event listener removed because we now poll the image object
-		// to see whether it has a width/height, i.e. it has begun loading and
-		// can be shown in the popup box.
-		//addListener(popupImg, "load", imageLoaded);
 
 		if (config.show_caption) {
 			popupCaption.style.display = "none";
@@ -198,50 +203,38 @@ var QuickSlideConfig;
 		}
 
 		popupImg.src = fromNode.getAttribute("href");
+
 		sizeTimer = setInterval(function () {
 			if (popupImg.width || popupImg.height) {
-				imageLoaded();
+				clearInterval(sizeTimer);
+				showImage();
 			}
-		}, 200);
+		}, 100);
 	};
 
-	imageLoaded = function () {
+	showImage = function () {
 		// Handler for when the full-sized image is ready to be shown in the
 		// popup.
-		clearInterval(sizeTimer);
-		try {
-			popupBox.replaceChild(popupImg, loadingSpinner);
-		} catch (err) {}
+		popupBox.className = "";
+		popupImg.style.display = "";
 
 		if (config.show_caption) {
+			popupBox.insertBefore(popupImg, popupCaption);
 			popupCaption.style.display = "";
-		}
-
-		if (config.use_dimmer) {
-			document.body.appendChild(dimmer);
+		} else {
+			popupBox.appendChild(popupImg);
 		}
 
 		recenterBox(popupBox, popupImg);
-		popupVisible = true;
 	};
 
 	hidePopup = function () {
-		// Close popup and put the spinner back in place ready for next popup.
-
-		// Line commented out because it causes an error event on Windows.
-		//popupImg.src = "";
-
-		// Image may not have finished loading when hidePopup() is called.
-		try {
-			popupBox.replaceChild(loadingSpinner, popupImg);
-		} catch (err) {}
+		clearInterval(sizeTimer);
 
 		document.body.removeChild(popupBox);
-		if (config.use_dimmer && popupVisible) {
+		if (config.use_dimmer) {
 			document.body.removeChild(dimmer);
 		}
-
-		popupVisible = false;
 	};
 
 	/* Initialisation stuff *
@@ -249,12 +242,7 @@ var QuickSlideConfig;
 
 	config = config || {};
 
-	// Preload 'loading' spinner image.
-	loadingSpinner.src = config.loading_spinner_url ||
-		"loading-spinner.gif";
-
-	popupBox.className = "quickslide-popup-box";
-	popupBox.appendChild(loadingSpinner);
+	popupBox.id = "quickslide-popup-box";
 	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
 	popupBox.style.zIndex = "9999";
 
@@ -263,24 +251,27 @@ var QuickSlideConfig;
 	});
 
 	if (config.use_dimmer) {
-		dimmer = document.createElement("div");
-		ds = dimmer.style;
-		ds.position = "fixed";
-		ds.zIndex = "9998";
-		ds.top = "0";
-		ds.right = "0";
-		ds.bottom = "0";
-		ds.left = "0";
-		dimmer.id = "quickslide-dimmer";
+		(function () {
+			var ds;
+			dimmer = document.createElement("div");
+			ds = dimmer.style;
+			ds.position = "fixed";
+			ds.zIndex = "9998"; // Note: one less than popupBox's zIndex
+			ds.top = "0";
+			ds.right = "0";
+			ds.bottom = "0";
+			ds.left = "0";
+			dimmer.id = "quickslide-dimmer";
 
-		addListener(dimmer, "click", function (e) {
-			hidePopup();
-		});
+			addListener(dimmer, "click", function (e) {
+				hidePopup();
+			});
+		}());
 	}
 
 	if (config.show_caption) {
 		popupCaption = document.createElement("div");
-		popupCaption.className = "quickslide-caption";
+		popupCaption.id = "quickslide-caption";
 		popupBox.appendChild(popupCaption);
 	}
 
