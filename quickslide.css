@@ -1,4 +1,5 @@
-.quickslide-popup-box {
+/* This is the main popup box. */
+#quickslide-popup-box {
 	background-color: #DDD;
 	border-width: 1px;
 	border-style: solid;
@@ -8,7 +9,8 @@
 	border-radius: 5px;
 }
 
-.quickslide-popup-box img {
+/* This is the main image shown in the popup. */
+#quickslide-image {
 	display: block;
 	border-width: 1px;
 	border-style: solid;
@@ -17,19 +19,36 @@
 	image-rendering: optimizeQuality;
 }
 
-.quickslide-caption {
+/* No prizes for guessing what this is. */
+#quickslide-caption {
 	text-align: center;
 	color: #333;
 	margin-top: 10px;
 }
 
-.quickslide-caption a {
+/* Since you can specify HTML for use in the caption, you can also set style
+ * rules for any elements it contains. */
+#quickslide-caption a {
 	color: #050;
+}
+
+/* The popup gets the class "loading" when a link is clicked, and the class is
+ * removed once the image begins downloading. */
+#quickslide-popup-box.loading {
+	background-image: url("loading-spinner.gif");
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
 }
 
 #quickslide-dimmer {
 	background-color: #333;
-	opacity: 0.8;
+	/* IE-only method for changing opacity */
 	filter: alpha(opacity = 80);
+
+	/* Standards-compliant method */
+	opacity: 0.8;
+
 	box-shadow: 0 0 9em #000 inset;
 }
