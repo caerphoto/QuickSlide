@@ -124,7 +124,7 @@ var QuickSlideConfig;
 
 		// Scale image to fit in window, taking its container box's borders and
 		// padding into account.
-		if (config.auto_fit) {
+		if (config.auto_fit !== false) {
 			if (w + px > cw) {
 				h = Math.round(h * (cw - px) / w);
 				w = cw - px;
@@ -170,14 +170,19 @@ var QuickSlideConfig;
 		// loads, so all images display at the same size as the first one to be
 		// opened.
 		popupImg = new Image();
+		// 'load' event listener removed because we now poll the image object
+		// to see whether it has a width/height, i.e. it has begun loading and
+		// can be shown in the popup box.
 		//addListener(popupImg, "load", imageLoaded);
-		addListener(popupImg, "error", function () {
-			alert("There was a problem loading the image.\n\nTrying again might help.");
-		});
 
-		// Need to set .src after attaching event listener, otherwise IE8 fails
-		// to trigger the "load" event when loading from the cache, since the
-		// image gets loaded before the assigning of the event handler.
+		// Removed 'error' event listener because it pops up even for
+		// unimportant errors like wrong MIME type, and I can find no way to
+		// determine the nature of the error.
+		//addListener(popupImg, "error", function (e) {
+			//alert("There was a problem loading the image.\n\nTrying again might help.");
+			//console.dir(e);
+		//});
+
 		popupImg.src = fromNode.href;
 		sizeTimer = setInterval(function () {
 			if (popupImg.width || popupImg.height) {
