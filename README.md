@@ -28,6 +28,7 @@ There are a few options you can specify to control the behaviour of the popups. 
       max_height: 600,
       use_dimmer: true,
       absolute_position: true,
+      show_caption: true,
       auto_fit: true }
     </script>
 
@@ -40,6 +41,8 @@ The options specified in this example are currently the only ones available. An 
 * `use_dimmer`: set to `true` to darken the rest of the page when a popup is show. The dimmer is a `<div>` with an ID of `quickslide-dimmer`. The [CSS file] used on the [demo page] contains a simple example of usage. Default value for this option is `false`.
 
 * `absolute_position`: set to `true` to make the popup scroll with the document. Default is `false`, which means the popup stays in the centre of the browser window even when you scroll up or down (i.e. it is displayed with `position: fixed style`).
+
+* `show_caption`: set to `true` to use the source link's `title` attribute as a caption for the popup image. You can use HTML in the title and it will be inserted as normal on the caption. Default is `false`. The caption is a `<div>` with a class of `quickslide-caption`.
 
 * `auto_fit`: set this to `false` to allow popups to be larger than the browser window. Default is `true`.
 
