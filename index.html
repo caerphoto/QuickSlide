@@ -45,6 +45,7 @@ QuickSlideConfig = {
   max_height: 600,
   use_dimmer: true,
   absolute_position: true,
+	show_caption: true,
   auto_fit: false };
 &lt;/script&gt;</em>
 
@@ -75,6 +76,13 @@ QuickSlideConfig = {
 			scroll up or down (i.e. it is displayed with <code>position: fixed</code>
 			style).</li>
 
+			<li><code>show_caption</code>: set to <code>true</code> to use the source
+			link's <code>title</code> attribute as a caption for the popup image. You
+			can use HTML in the title and it will be inserted as normal on the
+			caption (see the 'Gig' image below for an example). Default is
+			<code>false</code>. The caption is a <kbd>&lt;div&gt;</kbd> with a class
+			of <code>quickslide-caption</code>.</li>
+
 			<li><code>auto_fit</code>: set this to <code>false</code> to allow popups
 			to be larger than the browser window. Default is <code>true</code>.</li>
 		</ul>
@@ -97,31 +105,42 @@ QuickSlideConfig = {
 		again.</p>
 
 		<div class="gallery">
-			<a href="images/buslane_b.jpg" rel="quickslide">
+			<a href="images/buslane_b.jpg" rel="quickslide"
+				title="A bus lane in Stoke, England">
 				<img src="images/buslane_t.jpg"/>Bus Lane
 			</a>
-			<a href="images/cathedral_b.jpg" rel="quickslide">
+			<a href="images/cathedral_b.jpg" rel="quickslide"
+				title="Liverpool Anglican cathedral">
 				<img src="images/cathedral_t.jpg"/>Cathedral
 			</a>
-			<a href="images/euston_b.jpg" rel="quickslide">
+			<a href="images/euston_b.jpg" rel="quickslide"
+				title="London Euston train station">
 				<img src="images/euston_t.jpg"/>Euston
 			</a>
-			<a href="images/gig_b.jpg" rel="quickslide">
+			<a href="images/gig_b.jpg" rel="quickslide"
+				title="Al O'Hare, lead singer of <a
+					href='http://www.myspace.com/thetrestles'>The Trestles</a>, a band
+				from Liverpool, England">
 				<img src="images/gig_t.jpg"/>Gig
 			</a>
-			<a href="images/hedge_b.jpg" rel="quickslide">
+			<a href="images/hedge_b.jpg" rel="quickslide"
+				title="A road sign partly concealed by a hedge">
 				<img src="images/hedge_t.jpg"/>Hedge
 			</a>
-			<a href="images/lucy_b.jpg" rel="quickslide">
+			<a href="images/lucy_b.jpg" rel="quickslide"
+				title="My cat, Lucy">
 				<img src="images/lucy_t.jpg"/>Cat
 			</a>
-			<a href="images/snow_b.jpg" rel="quickslide">
+			<a href="images/snow_b.jpg" rel="quickslide"
+				title="A rare week of snow in Liverpool, England">
 				<img src="images/snow_t.jpg"/>Snow
 			</a>
-			<a href="images/totoro_b.jpg" rel="quickslide">
+			<a href="images/totoro_b.jpg" rel="quickslide"
+				title="Totoro!">
 				<img src="images/totoro_t.jpg"/>Totoro
 			</a>
-			<a href="images/catroof_b.jpg" rel="quickslide">
+			<a href="images/catroof_b.jpg" rel="quickslide"
+				title="My cat, Lucy, on our kitchen roof">
 				<img src="images/catroof_t.jpg"/>Cat on Roof
 			</a>
 		</div>
@@ -129,6 +148,7 @@ QuickSlideConfig = {
 		<script>
 			var QuickSlideConfig = {
 				max_height: 500,
+				show_caption: true,
 				use_dimmer: true };
 		</script>
 		<script src="quickslide.js"></script>

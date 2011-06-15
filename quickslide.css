@@ -10,12 +10,21 @@
 
 .quickslide-popup-box img {
 	display: block;
-	margin-bottom: 10px;
 	border-width: 1px;
 	border-style: solid;
 	border-color: #D0D0D0 #E4E4E4 #E4E4E4 #D0D0D0;
 	-ms-interpolation-mode: bicubic;
 	image-rendering: optimizeQuality;
+}
+
+.quickslide-caption {
+	text-align: center;
+	color: #333;
+	margin-top: 10px;
+}
+
+.quickslide-caption a {
+	color: #050;
 }
 
 #quickslide-dimmer {

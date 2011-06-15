@@ -11,7 +11,7 @@ var QuickSlideConfig;
 		dimmer, ds,
 		sizeTimer,
 		// Not used yet:
-		popupNext, popupPrev,
+		popupNext, popupPrev, popupCaption,
 
 		// These three are event normalisation functions based on examples in
 		// 'Eloquent JavaScript', by Marijn Haverbeke:
@@ -122,7 +122,15 @@ var QuickSlideConfig;
 			srcImg.style.maxWidth = w + "px";
 		}
 
-		// Calculate how much space the box's padding and borders take up.
+		// Prevent caption being wider than image, as it looks wrong. May still
+		// look odd if auto_fit is enabled and the caption is really long
+		// (wider than the whole browser window).
+		if (config.show_caption) {
+			popupCaption.style.maxWidth = w + "px";
+		}
+
+		// Calculate how much space the box's padding, borders and caption take
+		// up.
 		px = box.offsetWidth - w;
 		py = box.offsetHeight - h;
 
@@ -150,11 +158,9 @@ var QuickSlideConfig;
 			console.log("Window height:  ", ch);
 		}
 
-		if (config.absolute_position) {
-			bs.top = (Math.round((ch - h) / 2) + scrollTop - (py / 2)) + "px";
-		} else {
-			bs.top = (Math.round((ch - h) / 2) - (py / 2)) + "px";
-		}
+		bs.top = (Math.round((ch - h) / 2) +
+			(config.absolute_position ?  scrollTop : 0) -
+			(py / 2)) + "px";
 		bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
 	};
 
@@ -175,21 +181,23 @@ var QuickSlideConfig;
 		// opened.
 		popupImg = new Image();
 
-		// 'load' event listener removed because we now poll the image object
-		// to see whether it has a width/height, i.e. it has begun loading and
-		// can be shown in the popup box.
-		//addListener(popupImg, "load", imageLoaded);
-
-		// Removed 'error' event listener because it pops up even for
-		// unimportant errors like wrong MIME type, and I can find no way to
-		// determine the nature of the error.
 		addListener(popupImg, "error", function (e) {
 			if (!popupImg.width && !popupImg.height) {
 				alert("There was a problem loading the image.\n\nTrying again might help.");
 			}
 		});
 
-		popupImg.src = fromNode.href;
+		// 'load' event listener removed because we now poll the image object
+		// to see whether it has a width/height, i.e. it has begun loading and
+		// can be shown in the popup box.
+		//addListener(popupImg, "load", imageLoaded);
+
+		if (config.show_caption) {
+			popupCaption.style.display = "none";
+			popupCaption.innerHTML = fromNode.getAttribute("title");
+		}
+
+		popupImg.src = fromNode.getAttribute("href");
 		sizeTimer = setInterval(function () {
 			if (popupImg.width || popupImg.height) {
 				imageLoaded();
@@ -202,6 +210,9 @@ var QuickSlideConfig;
 		// popup.
 		clearInterval(sizeTimer);
 		popupBox.replaceChild(popupImg, loadingSpinner);
+		if (config.show_caption) {
+			popupCaption.style.display = "";
+		}
 
 		if (config.use_dimmer) {
 			document.body.appendChild(dimmer);
@@ -241,6 +252,12 @@ var QuickSlideConfig;
 
 	popupBox.className = "quickslide-popup-box";
 	popupBox.appendChild(loadingSpinner);
+	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
+	popupBox.style.zIndex = "9999";
+
+	addListener(popupBox, "click", function (e) {
+		hidePopup();
+	});
 
 	if (config.use_dimmer) {
 		dimmer = document.createElement("div");
@@ -258,12 +275,11 @@ var QuickSlideConfig;
 		});
 	}
 
-	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
-	popupBox.style.zIndex = "9999";
-
-	addListener(popupBox, "click", function (e) {
-		hidePopup();
-	});
+	if (config.show_caption) {
+		popupCaption = document.createElement("div");
+		popupCaption.className = "quickslide-caption";
+		popupBox.appendChild(popupCaption);
+	}
 
 	addListener(window, "load", function () {
 		setupGalleryLinks();
