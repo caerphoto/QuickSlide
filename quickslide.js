@@ -15,7 +15,7 @@ var QuickSlideConfig;
 		// These three are event normalisation functions based on examples in
 		// 'Eloquent JavaScript', by Marijn Haverbeke:
 		// http://eloquentjavascript.net/chapter13.html
-		normalizeEvent, addListener, triggerEvent,
+		normalizeEvent, addListener, delegateListener, triggerEvent,
 
 		// Other functions:
 		setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
@@ -74,18 +74,32 @@ var QuickSlideConfig;
 	};
 
 	setupGalleryLinks = function () {
-		// Assign click event handlers to each link with the appropriate rel
-		// attribute.
-		var galleryLinks, i, len;
+		/* Attach a click handler to the document body that listens for clicks,
+		*  then if the clicked element is not one we're interested in, traverse
+		*  up the DOM tree until we reach either an element we're interested
+		*  in, or the document body.
+		* 
+		*  This replaces the need to set click handlers on each individual link
+		*  element, so it still works even on elements that are added
+		*  dynamically after page load. */
+		addListener(document.body, "click", function (e) {
+			var el = e.target, isQ;
 
-		galleryLinks = document.querySelectorAll("a[rel=quickslide]");
+			isQ = function (testEl) {
+				return testEl.nodeName.toUpperCase() === "A" &&
+					testEl.getAttribute("rel").toUpperCase() === "QUICKSLIDE";
+			};
 
-		for (i = 0, len = galleryLinks.length; i < len; i += 1) {
-			addListener(galleryLinks[i], "click", function (e) {
+			// Traverse up the tree.
+			while (el && !isQ(el) && el !== this) {
+				el = el.parentNode;
+			}
+
+			if (el && isQ(el)) {
 				e.preventDefault();
-				setPopup(this);
-			});
-		}
+				setPopup(el);
+			}
+		});
 	};
 
 	recenterBox = function (box, srcImg) {
@@ -190,7 +204,7 @@ var QuickSlideConfig;
 		popupImg.id = "quickslide-image";
 		popupImg.style.display = "none";
 
-		addListener(popupImg, "error", function (e) {
+		addListener(popupImg, "error", function (err) {
 			if (!popupImg.width && !popupImg.height) {
 				alert("There was a problem loading the image.\n\nThe server might have taken too long to respond, or the image might have been deleted.");
 				hidePopup();

@@ -19,6 +19,11 @@ a:hover {
 	color: #BDB;
 }
 
+h1#logo {
+	background: url("logo48.png") left center no-repeat;
+	padding-left: 58px;
+}
+
 dfn {
 	border-bottom: 1px dotted #CCC;
 	cursor: help;
