@@ -28,12 +28,14 @@ There are a few options you can specify to control the behaviour of the popups. 
       use_dimmer: true,
       absolute_position: true,
       show_caption: true,
-      auto_fit: false }
+      auto_fit: false,
+      auto_detect: true,
+      no_wait: true };
     </script>
 
     <script src="quickslide.js"></script>
 
-The options specified in this example are currently the only ones available. An explanation of the options:
+An explanation of the options:
 
 * `max_width`, `max_height`: dimensions are in pixels. Specifying either will constrain the popup image to that size, maintaining aspect ratio. You can specify both. No default.
 
@@ -45,7 +47,12 @@ The options specified in this example are currently the only ones available. An 
 
 * `auto_fit`: set this to `false` to allow popups to be larger than the browser window. Default is `true`.
 
+* `auto_detect`: set to `true` to have QuickSlide attempt to automatically detect links to images, even ones without a `rel="quickslide"` attribute.  Only works for links whose URLs end in .jp[e]g, .png or .gif, and may have unintended side-effects, so use with caution. Default is `false`.
+
+* `no_wait`: set to `true` to initialise QuickSlide as soon as the browser has downloaded it. This is useful if if you are adding quickslide.js to your page after the DOM `onload` event has already fired (e.g. via insertion of a `<script>` tag). Default is `false`, meaning QuickSlide waits for the onload event before initialising.
+
 You can (and should) use CSS to customise the appearance of the popup and associated elements – see the [demo page] and its [CSS file] for an example.
 
 [CSS file]: http://caerphoto.com/quickslide/quickslide.css
 [demo page]: http://caerphoto.com/quickslide/
+
