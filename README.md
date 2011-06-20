@@ -16,7 +16,7 @@ gallery pages.
         </a>
 Make sure these links point to images, otherwise QuickSlide will get confused.
 
-That's it! QuickSlide is designed to be an unobtrusive, progressive enhancement to existing pages: it won't interfere with other JavaScript widgets or libraries, and your page won't break if for some reaon the code fails to load.
+That's it! QuickSlide is designed to be an unobtrusive, progressive enhancement to existing pages: it won't interfere with other JavaScript widgets or libraries, and your page won't break if for some reaon the code fails to load. It will also work on any links added to a page dynamically via JavaScript.
 
 ##Configuration
 There are a few options you can specify to control the behaviour of the popups. They are set using a `<script>` tag anywhere before the inclusion of the main `quickslide.js` file, like so:
@@ -28,7 +28,7 @@ There are a few options you can specify to control the behaviour of the popups. 
       use_dimmer: true,
       absolute_position: true,
       show_caption: true,
-      auto_fit: true }
+      auto_fit: false }
     </script>
 
     <script src="quickslide.js"></script>
