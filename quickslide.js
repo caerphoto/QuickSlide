@@ -87,7 +87,8 @@ var QuickSlideConfig;
 
 			isQ = function (testEl) {
 				return testEl.nodeName.toUpperCase() === "A" &&
-					testEl.getAttribute("rel").toUpperCase() === "QUICKSLIDE";
+					(testEl.getAttribute("rel") || "").toUpperCase() ===
+					"QUICKSLIDE";
 			};
 
 			// Traverse up the tree.
