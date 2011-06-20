@@ -47,14 +47,15 @@ QuickSlideConfig = {
   use_dimmer: true,
   absolute_position: true,
   show_caption: true,
-  auto_fit: false };
+  auto_fit: false,
+  auto_detect: true,
+  no_wait: true };
 &lt;/script&gt;</em>
 
 <span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
 </code></pre>
 
-		<p> The options specified in this example are currently the only ones
-		available. An explanation of the options:</p>
+		<p> An explanation of the options:</p>
 		<ul>
 			<li><code>max_width, max_height</code>: dimensions are in pixels.
 			Specifying either will constrain the popup image to that size,
@@ -81,6 +82,21 @@ QuickSlideConfig = {
 
 			<li><code>auto_fit</code>: set this to <code>false</code> to allow popups
 			to be larger than the browser window. Default is <code>true</code>.</li>
+
+			<li><code>auto_detect</code>: set to <code>true</code> to have QuickSlide
+			attempt to automatically detect links to images, even ones without a
+			<code>rel="quickslide"</code> attribute. Only works for links whose URLs
+			end in <kbd>.jp[e]g</kbd>, <kbd>.png</kbd> or <kbd>.gif</kbd>, and may
+			have unintended side-effects, so use with caution. Default is
+			<code>false</code>.</li>
+
+			<li><code>no_wait</code>: set to <code>true</code> to initialise
+			QuickSlide as soon as the browser has downloaded it. This is useful if if
+			you are adding <kbd>quickslide.js</kbd> to your page after the DOM
+			<kbd>onload</kbd> event has already fired (e.g. via insertion of a
+			<kbd>&lt;script&gt;</kbd> tag). Default is <code>false</code>, meaning
+			QuickSlide waits for the <kbd>onload</kbd> event before initialising.</li>
+
 		</ul>
 
 		<p>You can (and should) use CSS to customise the appearance of the popup
@@ -101,48 +117,56 @@ QuickSlideConfig = {
 		GitHub</a>.</p>
 
 		<h2>Example</h2>
-		<p>Click thumbnails to show larger image; click large image to hide it
-		again.</p>
+		<p>Click thumbnails to show larger image; click large image or press
+		<kbd>Esc</kbd> to hide it again.</p>
 
 		<div class="gallery">
 			<a href="images/buslane_b.jpg" rel="quickslide"
 				title="A bus lane in Stoke, England">
 				<img src="images/buslane_t.jpg"/>Bus Lane
 			</a>
+
 			<a href="images/cathedral_b.jpg" rel="quickslide"
 				title="Liverpool Anglican cathedral">
 				<img src="images/cathedral_t.jpg"/>Cathedral
 			</a>
+
 			<a href="images/euston_b.jpg" rel="quickslide"
 				title="London Euston train station">
 				<img src="images/euston_t.jpg"/>Euston
 			</a>
+
 			<a href="images/gig_b.jpg" rel="quickslide"
 				title="Al O'Hare, lead singer of <a
 					href='http://www.myspace.com/thetrestles'>The Trestles</a>, a band
 				from Liverpool, England">
 				<img src="images/gig_t.jpg"/>Gig
 			</a>
+
 			<a href="images/hedge_b.jpg" rel="quickslide"
 				title="A road sign partly concealed by a hedge">
 				<img src="images/hedge_t.jpg"/>Hedge
 			</a>
+
 			<a href="images/lucy_b.jpg" rel="quickslide"
 				title="My cat, Lucy">
 				<img src="images/lucy_t.jpg"/>Cat
 			</a>
-			<a href="images/snow_b.jpg" rel="quickslide"
-				title="A rare week of snow in Liverpool, England">
-				<img src="images/snow_t.jpg"/>Snow
+
+			<a href="images/snow_b.jpg"
+				title="This image was loaded because the <kbd>auto_detect</kbd> option
+				was specified in configuration.">
+				<img src="images/snow_t.jpg"/>Link with no <br><kbd>rel</kbd> attribute
 			</a>
+
 			<a href="images/totoro_b.jpg" rel="quickslide"
 				title="<a href='http://www.imdb.com/title/tt0096283/'>Totoro!</a>">
 				<img src="images/totoro_t.jpg"/>Totoro
 			</a>
+
 			<a href="images/catroof_b.jpg" rel="quickslide"
-				title="My cat, Lucy, on our kitchen roof. This image has been resized
-				by the browser from 1024 pixels high.">
-				<img src="images/catroof_t.jpg"/>Cat on Roof
+				title="This image has been resized by the browser from 1024 pixels
+				high."> <img src="images/catroof_t.jpg"/>Cat on Roof
 			</a>
 
 			<a href="foobar" rel="quickslide" title="Broken link test">Broken Link
@@ -157,6 +181,7 @@ QuickSlideConfig = {
 			var QuickSlideConfig = {
 				max_height: 500,
 				show_caption: true,
+				auto_detect: true,
 				use_dimmer: true };
 		</script>
 		<script src="quickslide.js"></script>

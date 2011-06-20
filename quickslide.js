@@ -81,15 +81,29 @@ var QuickSlideConfig;
 		* 
 		*  This replaces the need to set click handlers on each individual link
 		*  element, so it still works even on elements that are added
-		*  dynamically after page load. */
-		addListener(document.body, "click", function (e) {
-			var el = e.target, isQ;
+		*  dynamically after page load.
+		*/
+		var isImageLink, isQ;
 
-			isQ = function (testEl) {
-				return testEl.nodeName.toUpperCase() === "A" &&
-					(testEl.getAttribute("rel") || "").toUpperCase() ===
-					"QUICKSLIDE";
-			};
+		isImageLink = function (link) {
+			// Checks whether the given link's "href" attribute ends in an
+			// image-related extension.
+			var regex = /\.(jp(e?)g|png|gif)$/i;
+			return regex.test(link.getAttribute("href"));
+		};
+
+		isQ = function (testEl) {
+			// Returns true if the given element is a valid link to an
+			// image.
+			var nodeName = testEl.nodeName.toUpperCase(),
+				rel = (testEl.getAttribute("rel") || "").toUpperCase();
+
+			return nodeName === "A" && (rel === "QUICKSLIDE" ||
+				(config.auto_detect && isImageLink(testEl)));
+		};
+
+		addListener(document.body, "click", function (e) {
+			var el = e.target;
 
 			// Traverse up the tree.
 			while (el && !isQ(el) && el !== this) {
@@ -296,7 +310,11 @@ var QuickSlideConfig;
 		popupBox.appendChild(popupCaption);
 	}
 
-	addListener(window, "load", function () {
+	if (config.no_wait) {
 		setupGalleryLinks();
-	});
+	} else {
+		addListener(window, "load", function () {
+			setupGalleryLinks();
+		});
+	}
 }(QuickSlideConfig));

@@ -105,4 +105,5 @@ li {
 .gallery a img {
 	display: block;
 	margin: 0 auto 0.5em auto;
+	border: none;
 }
