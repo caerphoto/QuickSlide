@@ -190,12 +190,9 @@ var QuickSlideConfig;
 		popupBox.className = "loading";
 		recenterBox(popupBox);
 
-		// Throws an exception if popupImg is not a child of popupBox. This is
-		// much easier (and possibly quicker) than trying to determine if it's
-		// a child or not.
-		try {
+		if (popupImg && popupImg.parentNode === popupBox) {
 			popupBox.removeChild(popupImg);
-		} catch (err) {}
+		}
 
 		// Need to create a new image because if we just change the .src
 		// property, IE9 doesn't update the width and height once the new image
@@ -246,9 +243,11 @@ var QuickSlideConfig;
 	hidePopup = function () {
 		clearInterval(sizeTimer);
 
-		document.body.removeChild(popupBox);
-		if (config.use_dimmer) {
-			document.body.removeChild(dimmer);
+		if (popupBox.parentNode === document.body) {
+			document.body.removeChild(popupBox);
+			if (config.use_dimmer) {
+				document.body.removeChild(dimmer);
+			}
 		}
 	};
 
@@ -280,6 +279,13 @@ var QuickSlideConfig;
 
 			addListener(dimmer, "click", function (e) {
 				hidePopup();
+			});
+
+			addListener(document.body, "keydown", function (e) {
+				// Hide popup is [esc] is pressed.
+				if (e.keyCode === 27) {
+					hidePopup();
+				}
 			});
 		}());
 	}
