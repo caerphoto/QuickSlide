@@ -22,12 +22,6 @@ var QuickSlideConfig;
 		// Other functions:
 		init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
 
-	// Prevent multiple instances of QuickSlide.
-	if (document.getElementById("quickslide-popup-box")) {
-		console.log("Already loaded");
-		return;
-	}
-
 	normalizeEvent = function (e) {
 		// Make the event object standard within event handlers.
 
