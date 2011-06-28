@@ -23,11 +23,9 @@ var QuickSlideConfig;
 		init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
 
 	// Prevent multiple instances of QuickSlide.
-	if (QuickSlideConfig.already_loaded) {
+	if (document.getElementById("quickslide-popup-box")) {
 		console.log("Already loaded");
 		return;
-	} else {
-		QuickSlideConfig.already_loaded = true;
 	}
 
 	normalizeEvent = function (e) {

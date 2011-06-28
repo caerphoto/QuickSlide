@@ -1,5 +1,5 @@
 
-var QuickSlideConfig;(function(config){var popupImg,popupBox,dimmer,popupCaption,sizeTimer,popupNext,popupPrev,normalizeEvent,addListener,delegateListener,triggerEvent,init,setupGalleryLinks,setPopup,recenterBox,showImage,hidePopup;if(QuickSlideConfig.already_loaded){console.log("Already loaded");return;}else{QuickSlideConfig.already_loaded=true;}
+var QuickSlideConfig;(function(config){var popupImg,popupBox,dimmer,popupCaption,sizeTimer,popupNext,popupPrev,normalizeEvent,addListener,delegateListener,triggerEvent,init,setupGalleryLinks,setPopup,recenterBox,showImage,hidePopup;if(document.getElementById("quickslide-popup-box")){console.log("Already loaded");return;}
 normalizeEvent=function(e){if(!e.stopPropagation){e.stopPropagation=function(){this.cancelBubble=true;};e.preventDefault=function(){this.returnValue=false;};}
 if(e.srcElement&&!e.target){e.target=e.srcElement;}
 return e;};addListener=function(node,type,handler){var wrapHandler=function(e){handler.apply(node,[normalizeEvent(e||window.event)]);};if(node.attachEvent){node.attachEvent("on"+type,wrapHandler);}else{node.addEventListener(type,wrapHandler,false);}
