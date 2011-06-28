@@ -7,6 +7,9 @@
 	padding: 10px;
 	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
 	border-radius: 5px;
+	background-repeat: no-repeat;
+	background-image: url("loading-spinner.gif");
+	background-position: center;
 }
 
 /* This is the main image shown in the popup. */
@@ -35,9 +38,6 @@
 /* The popup gets the class "loading" when a link is clicked, and the class is
  * removed once the image begins downloading. */
 #quickslide-popup-box.loading {
-	background-image: url("loading-spinner.gif");
-	background-position: center;
-	background-repeat: no-repeat;
 	width: 16px;
 	height: 16px;
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<script>
+// 'Controller' code, handles requests for config state from each instance of
+// the Content Script.
+
+chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+	if (request.func == "getConfig") {
+		sendResponse({ config: {
+			max_width: +localStorage.max_width,
+			max_height: +localStorage.max_height,
+			use_dimmer: localStorage.use_dimmer === "true",
+			absolute_position: localStorage.absolute_position === "true",
+			show_caption: localStorage.show_caption === "true",
+			auto_fit: localStorage.auto_fit === "true"
+		}});
+	}
+});
+		</script>
+	</body>
+</html>
+

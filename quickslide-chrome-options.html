@@ -33,16 +33,24 @@
 				transition: none;
 			}
 
+			p.subdued {
+				font-size: 0.6em;
+				color: #888;
+				margin-bottom: 2em;
+			}
+
 		</style>
 	</head>
 
-	<body class="quickslide-options-page">
+	<body>
 		<h1>QuickSlide Options</h1>
 		<label for="max_width">Max width: <input id="max_width" type="number">
 		</label>
 		
 		<label for="max_height">Max height: <input id="max_height" type="number">
 		</label>
+
+		<p class="subdued">(enter <kbd>0</kbd> for no maximum)</p>
 
 		<label for="use_dimmer"><input id="use_dimmer" type="checkbox"> Use
 			background dimmer
@@ -59,7 +67,43 @@
 		<button id="save">Save</button>
 		<span id="status_box">options saved&hellip;</span>
 
-		<script src="quickslide-chrome.js"></script>
+		<script>
+var statusBox,
+	txtMaxWidth, txtMaxHeight,
+	chkUseDimmer, chkAbsolutePosition, chkShowCaption, chkAutoFit,
+	btnSave;
+
+statusBox = document.getElementById("status_box");
+txtMaxWidth = document.getElementById("max_width");
+txtMaxHeight = document.getElementById("max_height");
+chkUseDimmer = document.getElementById("use_dimmer");
+chkAbsolutePosition = document.getElementById("absolute_position");
+chkShowCaption = document.getElementById("show_caption");
+chkAutoFit = document.getElementById("auto_fit");
+btnSave = document.getElementById("save");
+
+// localStorage only stores strings.
+txtMaxWidth.value = +localStorage.max_width;
+txtMaxHeight.value = +localStorage.max_height;
+chkUseDimmer.checked = localStorage.use_dimmer === "true";
+chkAbsolutePosition.checked = localStorage.absolute_position === "true";
+chkShowCaption.checked = localStorage.show_caption === "true";
+chkAutoFit.checked = localStorage.auto_fit === "true";
+
+btnSave.addEventListener("click", function () {
+	localStorage.max_width = txtMaxWidth.value;
+	localStorage.max_height = txtMaxHeight.value;
+	localStorage.use_dimmer = chkUseDimmer.checked;
+	localStorage.absolute_position = chkAbsolutePosition.checked;
+	localStorage.show_caption = chkShowCaption.checked;
+	localStorage.auto_fit = chkAutoFit.checked;
+
+	statusBox.className = "show";
+	window.setTimeout(function () {
+		statusBox.className = "";
+	}, 1000);
+});
+		</script>
 	</body>
 </html>
 

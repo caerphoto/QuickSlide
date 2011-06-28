@@ -1,12 +1,11 @@
-/*globals window */
+/*globals window, chrome */
 // Global config object, which can be defined in a <script> tag in the HTML.
 // Contains settings for max image dimensions, auto-scaling, etc.
 var QuickSlideConfig;
 
 (function (config) {
-	var loadingSpinner = document.createElement("img"),
-		popupImg,
-		popupBox = document.createElement("div"),
+	var popupImg,
+		popupBox,
 		dimmer, popupCaption,
 
 		// Interval timer used when polling an Image object for size info.
@@ -21,7 +20,15 @@ var QuickSlideConfig;
 		normalizeEvent, addListener, delegateListener, triggerEvent,
 
 		// Other functions:
-		setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
+		init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
+
+	// Prevent multiple instances of QuickSlide.
+	if (QuickSlideConfig.already_loaded) {
+		console.log("Already loaded");
+		return;
+	} else {
+		QuickSlideConfig.already_loaded = true;
+	}
 
 	normalizeEvent = function (e) {
 		// Make the event object standard within event handlers.
@@ -158,20 +165,20 @@ var QuickSlideConfig;
 				srcImg.style.maxWidth = w + "px";
 			}
 
-			// Prevent caption being wider than image, as it looks wrong. May still
-			// look odd if auto_fit is enabled and the caption is really long
-			// (wider than the whole browser window).
+			// Prevent caption being wider than image, as it looks wrong. May
+			// still look odd if auto_fit is enabled and the caption is really
+			// long (wider than the whole browser window).
 			if (config.show_caption) {
 				popupCaption.style.maxWidth = w + "px";
 			}
 
-			// Calculate how much space the box's padding, borders and caption take
-			// up.
+			// Calculate how much space the box's padding, borders and caption
+			// take up.
 			px = box.offsetWidth - w;
 			py = box.offsetHeight - h;
 
-			// Scale image to fit in window, taking its container box's borders and
-			// padding into account.
+			// Scale image to fit in window, taking its container box's borders
+			// and padding into account.
 			if (config.auto_fit !== false) {
 				if (w + px > cw) {
 					h = Math.round(h * (cw - px) / w);
@@ -200,12 +207,15 @@ var QuickSlideConfig;
 	};
 
 	setPopup = function (fromNode) {
+		var spinnerURL;
 		if (config.use_dimmer) {
 			document.body.appendChild(dimmer);
 		}
 
 		document.body.appendChild(popupBox);
 		popupBox.className = "loading";
+		if (config.chrome_extension) {
+		}
 		recenterBox(popupBox);
 
 		if (popupImg && popupImg.parentNode === popupBox) {
@@ -272,20 +282,26 @@ var QuickSlideConfig;
 	/* Initialisation stuff *
 	 * -------------------- */
 
-	config = config || {};
+	init = function () {
+		var ds;
 
-	popupBox.id = "quickslide-popup-box";
-	popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
-	popupBox.style.zIndex = "9999";
+		popupBox = document.createElement("div");
+		popupBox.id = "quickslide-popup-box";
+		popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
+		popupBox.style.zIndex = "9999";
 
-	addListener(popupBox, "click", function (e) {
-		hidePopup();
-	});
+		if (config.chrome_extension) {
+			ds = chrome.extension.getURL("loading-spinner.gif");
+			popupBox.style.backgroundImage = ["url(", ds, ")"].join("'");
+		}
 
-	if (config.use_dimmer) {
-		(function () {
-			var ds;
+		addListener(popupBox, "click", function (e) {
+			hidePopup();
+		});
+
+		if (config.use_dimmer) {
 			dimmer = document.createElement("div");
+
 			ds = dimmer.style;
 			ds.position = "fixed";
 			ds.zIndex = "9998"; // Note: one less than popupBox's zIndex
@@ -305,20 +321,42 @@ var QuickSlideConfig;
 					hidePopup();
 				}
 			});
-		}());
-	}
+		}
 
-	if (config.show_caption) {
-		popupCaption = document.createElement("div");
-		popupCaption.id = "quickslide-caption";
-		popupBox.appendChild(popupCaption);
-	}
+		if (config.show_caption) {
+			popupCaption = document.createElement("div");
+			popupCaption.id = "quickslide-caption";
+			popupBox.appendChild(popupCaption);
+		}
 
-	if (config.no_wait) {
-		setupGalleryLinks();
-	} else {
-		addListener(window, "load", function () {
+		if (config.no_wait) {
 			setupGalleryLinks();
+		} else {
+			addListener(window, "load", function () {
+				setupGalleryLinks();
+			});
+		}
+	};
+
+	if (config.chrome_extension) {
+		// Wait for config info before initialising, because bad things happen
+		// if we don't.
+		chrome.extension.sendRequest({ func: "getConfig" }, function (response) {
+			var c = response.config;
+
+			config.max_width = c.max_width;
+			config.max_height = c.max_height;
+			config.use_dimmer = c.use_dimmer;
+			config.absolute_position = c.absolute_position;
+			config.show_caption = c.show_caption;
+			config.auto_fit = c.auto_fit;
+			config.auto_detect = true;
+			config.no_wait = true;
+
+			init();
 		});
+	} else {
+		init();
 	}
-}(QuickSlideConfig));
+
+}(QuickSlideConfig || {}));
