@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>QuickSlide Options</title>
+		<style>
+			body {
+				margin: 2em;
+				font-family: "Lucida Grande", "Segoe UI", "Microsoft Sans Serif",
+					"Tahoma", sans-serif;
+			}
+
+			h1 {
+				background: url("logo48.png") left center no-repeat;
+				padding-left: 56px;
+				height: 48px;
+			}
+
+			label {
+				display: block;
+				margin-bottom: 1em;
+			}
+
+			#status_box {
+				color: rgba(0, 0, 0, 0);
+				padding-left: 1em;
+				-webkit-transition: color 0.5s linear;
+				transition: color 0.3s linear;
+			}
+
+			#status_box.show {
+				color: #888;
+				-webkit-transition: none;
+				transition: none;
+			}
+
+		</style>
+	</head>
+
+	<body class="quickslide-options-page">
+		<h1>QuickSlide Options</h1>
+		<label for="max_width">Max width: <input id="max_width" type="number">
+		</label>
+		
+		<label for="max_height">Max height: <input id="max_height" type="number">
+		</label>
+
+		<label for="use_dimmer"><input id="use_dimmer" type="checkbox"> Use
+			background dimmer
+		</label>
+			
+		<label for="absolute_position"><input id="absolute_position" type="checkbox">
+			Absolute position on page</label>
+
+		<label for="show_caption"><input id="show_caption" type="checkbox"> Use
+			link <kbd>title</kbd> attribute as popup caption</label>
+
+		<label for="auto_fit"><input id="auto_fit" type="checkbox"> Fit on page</label>
+
+		<button id="save">Save</button>
+		<span id="status_box">options saved&hellip;</span>
+
+		<script src="quickslide-chrome.js"></script>
+	</body>
+</html>
+

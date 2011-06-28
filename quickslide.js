@@ -7,10 +7,13 @@ var QuickSlideConfig;
 	var loadingSpinner = document.createElement("img"),
 		popupImg,
 		popupBox = document.createElement("div"),
-		dimmer,
+		dimmer, popupCaption,
+
+		// Interval timer used when polling an Image object for size info.
 		sizeTimer,
+
 		// Not used yet:
-		popupNext, popupPrev, popupCaption,
+		popupNext, popupPrev,
 
 		// These three are event normalisation functions based on examples in
 		// 'Eloquent JavaScript', by Marijn Haverbeke:
@@ -22,6 +25,7 @@ var QuickSlideConfig;
 
 	normalizeEvent = function (e) {
 		// Make the event object standard within event handlers.
+
 		if (!e.stopPropagation) {
 			e.stopPropagation = function () {
 				this.cancelBubble = true;
