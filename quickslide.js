@@ -22,6 +22,12 @@ var QuickSlideConfig;
 		// Other functions:
 		init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
 
+
+	// Bail out immediately if there's already a QuickSlide box on the page.
+	if (document.getElementById("quickslide-popup-box")) {
+		return;
+	}
+
 	normalizeEvent = function (e) {
 		// Make the event object standard within event handlers.
 
@@ -201,10 +207,12 @@ var QuickSlideConfig;
 	setPopup = function (fromNode) {
 		var spinnerURL;
 		if (config.use_dimmer) {
-			document.body.appendChild(dimmer);
+			dimmer.style.display = "";
+			//document.body.appendChild(dimmer);
 		}
 
-		document.body.appendChild(popupBox);
+		popupBox.style.display = "";
+		//document.body.appendChild(popupBox);
 		popupBox.className = "loading";
 		if (config.chrome_extension) {
 		}
@@ -275,33 +283,39 @@ var QuickSlideConfig;
 	 * -------------------- */
 
 	init = function () {
-		var ds;
+		var s;
 
 		popupBox = document.createElement("div");
 		popupBox.id = "quickslide-popup-box";
-		popupBox.style.position = config.absolute_position ? "absolute" : "fixed";
-		popupBox.style.zIndex = "9999";
+
+		s = popupBox.style;
+		s.position = config.absolute_position ? "absolute" : "fixed";
+		s.zIndex = "9999";
+		s.display = "none";
 
 		if (config.chrome_extension) {
-			ds = chrome.extension.getURL("loading-spinner.gif");
-			popupBox.style.backgroundImage = ["url(", ds, ")"].join("'");
+			s = chrome.extension.getURL("loading-spinner.gif");
+			popupBox.style.backgroundImage = ["url(", s, ")"].join("'");
 		}
 
 		addListener(popupBox, "click", function (e) {
 			hidePopup();
 		});
 
+		document.body.appendChild(popupBox);
+
 		if (config.use_dimmer) {
 			dimmer = document.createElement("div");
-
-			ds = dimmer.style;
-			ds.position = "fixed";
-			ds.zIndex = "9998"; // Note: one less than popupBox's zIndex
-			ds.top = "0";
-			ds.right = "0";
-			ds.bottom = "0";
-			ds.left = "0";
 			dimmer.id = "quickslide-dimmer";
+
+			s = dimmer.style;
+			s.position = "fixed";
+			s.zIndex = "9998"; // Note: one less than popupBox's zIndex
+			s.top = "0";
+			s.right = "0";
+			s.bottom = "0";
+			s.left = "0";
+			s.display = "none";
 
 			addListener(dimmer, "click", function (e) {
 				hidePopup();
@@ -313,6 +327,8 @@ var QuickSlideConfig;
 					hidePopup();
 				}
 			});
+
+			document.body.appendChild(dimmer);
 		}
 
 		if (config.show_caption) {
@@ -331,8 +347,8 @@ var QuickSlideConfig;
 	};
 
 	if (config.chrome_extension) {
-		// Wait for config info before initialising, because bad things happen
-		// if we don't.
+		// Wait for the background page to reply with config info before
+		// initialising, otherwise config will be blank.
 		chrome.extension.sendRequest({ func: "getConfig" }, function (response) {
 			var c = response.config;
 
