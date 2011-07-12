@@ -211,9 +211,9 @@ var QuickSlideConfig;
 			//document.body.appendChild(dimmer);
 		}
 
-		popupBox.style.display = "";
 		//document.body.appendChild(popupBox);
 		popupBox.className = "loading";
+		popupBox.style.display = "";
 		if (config.chrome_extension) {
 		}
 		recenterBox(popupBox);
@@ -272,9 +272,11 @@ var QuickSlideConfig;
 		clearInterval(sizeTimer);
 
 		if (popupBox.parentNode === document.body) {
-			document.body.removeChild(popupBox);
+			popupBox.style.display = "none";
+			//document.body.removeChild(popupBox);
 			if (config.use_dimmer) {
-				document.body.removeChild(dimmer);
+				dimmer.style.display = "none";
+				//document.body.removeChild(dimmer);
 			}
 		}
 	};
