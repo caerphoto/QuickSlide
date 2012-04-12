@@ -1,21 +1,21 @@
 {
-  "name": "QuickSlide",
-  "version": "1.0",
-  "description": "Add QuickSlide popup capability to any page.",
-  "options_page": "quickslide-chrome-options.html",
-  "background_page": "quickslide-chrome-background.html",
-  "icons": {
-    "16": "logo16.png",
-    "48": "logo48.png",
-    "128": "logo128.png" },
-  "homepage_url": "http://www.caerphoto.com/quickslide/",
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "css": ["quickslide.css"],
-      "js": ["quickslide-chrome.js", "quickslide.js"],
-	  "all_frames": true
-    }
-  ]
+	"name": "QuickSlide",
+	"version": "1.0",
+	"description": "Add QuickSlide popup capability to any page.",
+	"options_page": "quickslide-chrome-options.html",
+	"background_page": "quickslide-chrome-background.html",
+	"icons": {
+		"16": "logo16.png",
+		"48": "logo48.png",
+		"128": "logo128.png" },
+	"homepage_url": "http://www.caerphoto.com/quickslide/",
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"css": ["quickslide.css"],
+			"js": ["quickslide-chrome.js", "quickslide.js"],
+		"all_frames": true
+		}
+	]
 }
 

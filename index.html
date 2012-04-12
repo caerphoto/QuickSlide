@@ -97,7 +97,11 @@ QuickSlideConfig = {
 			you are adding <kbd>quickslide.js</kbd> to your page after the DOM
 			<kbd>onload</kbd> event has already fired (e.g. via insertion of a
 			<kbd>&lt;script&gt;</kbd> tag). Default is <code>false</code>, meaning
-			QuickSlide waits for the <kbd>onload</kbd> event before initialising.</li>
+			QuickSlide waits for the <kbd>onload</kbd> event before initialising.
+			This option will be ignored if you load <kbd>quickslide.js</kbd> from the
+			document <kbd>&lt;head&gt;</kbd>, since in those instances there won't
+			yet be a document body to append the necessary elements (popup box and
+			dimmer) to.</li>
 
 		</ul>
 

@@ -1,54 +1,60 @@
 /* This is the main popup box. */
 #quickslide-popup-box {
-	background-color: #DDD;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #EEE #CCC #CCC #EEE;
-	padding: 10px;
-	box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
-	border-radius: 5px;
-	background-repeat: no-repeat;
-	background-image: url("loading-spinner.gif");
-	background-position: center;
-}
-
-/* This is the main image shown in the popup. */
-#quickslide-image {
-	display: block;
-	border-width: 1px;
-	border-style: solid;
-	border-color: #D0D0D0 #E4E4E4 #E4E4E4 #D0D0D0;
-	-ms-interpolation-mode: bicubic;
-	image-rendering: optimizeQuality;
-}
-
-/* No prizes for guessing what this is. */
-#quickslide-caption {
-	text-align: center;
-	color: #333;
-	margin-top: 10px;
-}
-
-/* Since you can specify HTML for use in the caption, you can also set style
- * rules for any elements it contains. */
-#quickslide-caption a {
-	color: #050;
+    background-color: #DDD;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #EEE #CCC #CCC #EEE;
+    padding: 10px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+    background-image: url("loading-spinner.gif");
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 /* The popup gets the class "loading" when a link is clicked, and the class is
  * removed once the image begins downloading. */
 #quickslide-popup-box.loading {
-	width: 16px;
-	height: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* The popup gets given this class once the image has fully downloaded. */
+#quickslide-popup-box.loaded {
+    background-image: none;
+}
+
+/* This is the main image shown in the popup. */
+#quickslide-image {
+    display: block;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #D0D0D0 #E4E4E4 #E4E4E4 #D0D0D0;
+    -ms-interpolation-mode: bicubic;
+    image-rendering: optimizeQuality;
+}
+
+/* No prizes for guessing what this is. */
+#quickslide-caption {
+    text-align: center;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Since you can specify HTML for use in the caption, you can also set style
+ * rules for any elements it contains. */
+#quickslide-caption a {
+    color: #050;
 }
 
 #quickslide-dimmer {
-	background-color: #333;
-	/* IE-only method for changing opacity */
-	filter: alpha(opacity = 80);
+    background-color: #333;
+    /* IE-only method for changing opacity */
+    filter: alpha(opacity = 80);
 
-	/* Standards-compliant method */
-	opacity: 0.8;
+    /* Standards-compliant method */
+    opacity: 0.8;
 
-	box-shadow: 0 0 9em #000 inset;
+    /* Darken edges a bit */
+    box-shadow: 0 0 9em #000 inset;
 }
