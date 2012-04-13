@@ -5,11 +5,43 @@
     border-style: solid;
     border-color: #EEE #CCC #CCC #EEE;
     padding: 10px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
     border-radius: 3px;
     background-image: url("loading-spinner.gif");
     background-repeat: no-repeat;
     background-position: center;
+}
+
+/* Fake 'close button'. Since clicking anywhere on or outside the popup will
+ * close the box, this 'button' doesn't actually need to have any JS code
+ * associated with it. */
+#quickslide-popup-box:after {
+    content: "close \00D7"; /* &times; or multiplication symbol */
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    height: 20px;
+    padding: 0 10px;
+
+    border-radius: 20px;
+    background: #ccc;
+    border: 1px solid rgba(255,255,255, 0.5);
+    box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.2);
+
+    font-size: 14px;
+    font-weight: bold;
+    color: #555;
+    line-height: 20px;
+    text-align: center;
+    text-shadow: 0 1px 1px #f0f0f0;
+
+    cursor: pointer;
+
+    visibility: hidden;
+}
+
+#quickslide-popup-box:hover:after {
+    visibility: visible;
 }
 
 /* The popup gets the class "loading" when a link is clicked, and the class is
@@ -39,6 +71,7 @@
     text-align: center;
     color: #333;
     margin-top: 10px;
+    text-shadow: 0 1px 1px #fff;
 }
 
 /* Since you can specify HTML for use in the caption, you can also set style
