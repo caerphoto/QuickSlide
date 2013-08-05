@@ -12,13 +12,10 @@ var QuickSlideConfig;
         // Interval timer used when polling an Image object for size info.
         sizeTimer,
 
-        // Not used yet:
-        popupNext, popupPrev,
-
         // These three are event normalisation functions based on examples in
         // 'Eloquent JavaScript', by Marijn Haverbeke:
         // http://eloquentjavascript.net/chapter13.html
-        normalizeEvent, addListener, delegateListener, triggerEvent,
+        normalizeEvent, addListener, triggerEvent,
 
         // Other functions:
         init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
@@ -89,7 +86,7 @@ var QuickSlideConfig;
         *  then if the clicked element is not one we're interested in, traverse
         *  up the DOM tree until we reach either an element we're interested
         *  in, or the document body.
-        * 
+        *
         *  This replaces the need to set click handlers on each individual link
         *  element, so it still works even on elements that are added
         *  dynamically after page load.
@@ -101,10 +98,13 @@ var QuickSlideConfig;
             // image-related extension, and the link doesn't contain '=http',
             // which usually indicates a redirect to another domain, not an
             // actual image URL.
+            // Also returns false if the link already has a click handler,
+            // albeit only the old-style assignation, since browser support for
+            // element.eventListenerList is limited as of April 2012.
             var href = link.getAttribute("href"),
                 imgExt = /\.(jp(e?)g|png|gif)$/i,
                 redirect = /=http/;
-            return imgExt.test(href) && !redirect.test(href);
+            return imgExt.test(href) && !redirect.test(href) && !link.onclick;
         };
 
         isQ = function (testEl) {
@@ -223,7 +223,6 @@ var QuickSlideConfig;
     };
 
     setPopup = function (fromNode) {
-        var spinnerURL;
         if (config.use_dimmer) {
             dimmer.style.display = "";
             //document.body.appendChild(dimmer);
@@ -232,8 +231,6 @@ var QuickSlideConfig;
         //document.body.appendChild(popupBox);
         popupBox.className = "loading";
         popupBox.style.display = "";
-        if (config.chrome_extension) {
-        }
         recenterBox(popupBox);
 
         if (popupImg && popupImg.parentNode === popupBox) {
@@ -244,15 +241,15 @@ var QuickSlideConfig;
         // property, IE9 doesn't update the width and height once the new image
         // loads, so all images display at the same size as the first one to be
         // opened.
-        popupImg = new Image();
+        popupImg = document.createElement("img");
         popupImg.id = "quickslide-image";
         popupImg.style.display = "none";
 
-        addListener(popupImg, "error", function (err) {
+        addListener(popupImg, "error", function () {
             if (!popupImg.width && !popupImg.height) {
                 //alert("There was a problem loading the image.\n\nThe server might have taken too long to respond, or the image might have been deleted.");
                 hidePopup();
-            window.location = popupImg.src;
+                window.location = popupImg.src;
             }
         });
 
@@ -324,7 +321,7 @@ var QuickSlideConfig;
             popupBox.style.backgroundImage = ["url(", s, ")"].join("'");
         }
 
-        addListener(popupBox, "click", function (e) {
+        addListener(popupBox, "click", function () {
             hidePopup();
         });
 
@@ -343,7 +340,7 @@ var QuickSlideConfig;
             s.left = "0";
             s.display = "none";
 
-            addListener(dimmer, "click", function (e) {
+            addListener(dimmer, "click", function () {
                 hidePopup();
             });
 

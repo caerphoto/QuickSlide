@@ -1,197 +1,202 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>QuickSlide</title>
-		<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
-		<link rel="stylesheet" href="demo.css">
-		<link rel="stylesheet" href="quickslide.css">
-		<meta name="description" content="Lightweight, unobtrusive JavaScript popup image viewer (lightbox)">
-		<meta name="keywords" content="lightbox,popup,viewer,image,photo,javascript">
-	</head>
+  <head>
+    <title>QuickSlide</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="demo.css">
+    <link rel="stylesheet" href="quickslide.css">
+    <meta name="description" content="Lightweight, unobtrusive JavaScript popup image viewer (lightbox)">
+    <meta name="keywords" content="lightbox,popup,viewer,image,photo,javascript">
+  </head>
 
-	<body>
-		<h1 id="logo">QuickSlide</h1>
-		<p>QuickSlide is a basic popup image viewer. Adding it to a page is easy:
-		<ol>
-			<li>
-				<p>Include the <kbd>quickslide.js</kbd> file at the bottom of your
-				page:</p>
-				<pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
-			</li>
-			<li>
-				<p>Add <code>rel="quickslide"</code> to any links you want converted to
-				popups:</p>
+  <body>
+    <h1 id="logo">QuickSlide</h1>
+    <p>QuickSlide is a basic popup image viewer. Adding it to a page is easy:
+    <ol>
+      <li>
+      <p>Include the <kbd>quickslide.js</kbd> file at the bottom of your
+      page:</p>
+        <pre><code>&lt;script src="quickslide.js"&gt;&lt;/script&gt;</code></pre>
+      </li>
+      <li>
+      <p>Add <code>rel="quickslide"</code> to any links you want converted to
+      popups:</p>
 
 <pre><code class="de-em">&lt;a href="images/buslane_b.jpg" <em>rel="quickslide"</em>&gt;
   &lt;img src="images/buslane_t.jpg"&gt;Bus Lane
 &lt;/a&gt;
 </code></pre>
-				<p>Make sure these links point to images, otherwise QuickSlide will get
-				confused.</p>
+      <p>Make sure these links point to images, otherwise QuickSlide will get
+      confused.</p>
 
-			</li>
-		</ol>
-		<p>That&rsquo;s it! QuickSlide is designed to be an unobtrusive, progressive
-		enhancement to existing pages: it won&rsquo;t interfere with other
-		JavaScript widgets or libraries, and your page won&rsquo;t break if for
-		some reaon the code fails to load. It will also work on any links added to
-		a page dynamically via JavaScript.</p>
+      </li>
+    </ol>
+    <p>That&rsquo;s it! QuickSlide is designed to be an unobtrusive, progressive
+    enhancement to existing pages: it won&rsquo;t interfere with other
+    JavaScript widgets or libraries, and your page won&rsquo;t break if for
+    some reaon the code fails to load. It will also work on any links added to
+    a page dynamically via JavaScript.</p>
 
-		<h2>Configuration</h2>
-		<p>There are a few options you can specify to control the behaviour of the
-		popups. They are set using a <kbd>&lt;script&gt;</kbd> tag anywhere before
-		the inclusion of the main <kbd>quickslide.js</kbd> file, like so:</p>
+    <h2>Configuration</h2>
+    <p>There are a few options you can specify to control the behaviour of the
+    popups. They are set using a <kbd>&lt;script&gt;</kbd> tag anywhere before
+    the inclusion of the main <kbd>quickslide.js</kbd> file, like so:</p>
 
 <pre><code class="de-em"><em>&lt;script&gt;
 QuickSlideConfig = {
-  max_width: 800,
-  max_height: 600,
-  use_dimmer: true,
-  absolute_position: true,
-  show_caption: true,
-  auto_fit: false,
-  auto_detect: true,
-  no_wait: true };
+    max_width: 800,
+    max_height: 600,
+    use_dimmer: true,
+    absolute_position: true,
+    show_caption: true,
+    auto_fit: false,
+    auto_detect: true,
+    no_wait: true };
 &lt;/script&gt;</em>
 
 <span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
 </code></pre>
 
-		<p> An explanation of the options:</p>
-		<ul>
-			<li><code>max_width, max_height</code>: dimensions are in pixels.
-			Specifying either will constrain the popup image to that size,
-			maintaining aspect ratio. You can specify both. No default.</li>
+    <p> An explanation of the options:</p>
+    <ul>
+      <li><code>max_width, max_height</code>: dimensions are in pixels.
+      Specifying either will constrain the popup image to that size,
+      maintaining aspect ratio. You can specify both. No default.</li>
 
-			<li><code>use_dimmer</code>: set to <code>true</code> to also create a
-			fixed-position <kbd>&lt;div&gt;</kbd> in addition to the popup box
-			itself. It has an ID of <code>#quickslide-dimmer</code>, is
-			fixed-position and covers the whole window.  Default value for this
-			option is <code>false</code>.</li>
+      <li><code>use_dimmer</code>: set to <code>true</code> to also create a
+      fixed-position <kbd>&lt;div&gt;</kbd> in addition to the popup box
+      itself. It has an ID of <code>#quickslide-dimmer</code>, is
+      fixed-position and covers the whole window.  Default value for this
+      option is <code>false</code>.</li>
 
-			<li><code>absolute_position</code>: set to <code>true</code> to make the
-			popup scroll with the document. Default is <code>false</code>, which
-			means the popup stays in the centre of the browser window even when you
-			scroll up or down (i.e. it is displayed with <code>position: fixed</code>
-			style).</li>
+      <li><code>absolute_position</code>: set to <code>true</code> to make the
+      popup scroll with the document. Default is <code>false</code>, which
+      means the popup stays in the centre of the browser window even when you
+      scroll up or down (i.e. it is displayed with <code>position: fixed</code>
+      style).</li>
 
-			<li><code>show_caption</code>: set to <code>true</code> to use the source
-			link&rsquo;s <code>title</code> attribute as a caption for the popup
-			image. You can use HTML in the title and it will be inserted as normal on
-			the caption (see the 'Gig' image below for an example). Default is
-			<code>false</code>. The caption is a <kbd>&lt;div&gt;</kbd> with an ID of
-			<code>quickslide-caption</code>.</li>
+      <li><code>show_caption</code>: set to <code>true</code> to use the source
+      link&rsquo;s <code>title</code> attribute as a caption for the popup
+      image. You can use HTML in the title and it will be inserted as normal on
+      the caption (see the 'Gig' image below for an example). Default is
+      <code>false</code>. The caption is a <kbd>&lt;div&gt;</kbd> with an ID of
+      <code>quickslide-caption</code>.</li>
 
-			<li><code>auto_fit</code>: set this to <code>false</code> to allow popups
-			to be larger than the browser window. Default is <code>true</code>.</li>
+      <li><code>auto_fit</code>: set this to <code>false</code> to allow popups
+      to be larger than the browser window. Default is <code>true</code>.</li>
 
-			<li><code>auto_detect</code>: set to <code>true</code> to have QuickSlide
-			attempt to automatically detect links to images, even ones without a
-			<code>rel="quickslide"</code> attribute. Only works for links whose URLs
-			end in <kbd>.jp[e]g</kbd>, <kbd>.png</kbd> or <kbd>.gif</kbd>, and may
-			have unintended side-effects, so use with caution. Default is
-			<code>false</code>.</li>
+      <li><code>auto_detect</code>: set to <code>true</code> to have QuickSlide
+      attempt to automatically detect links to images, even ones without a
+      <code>rel="quickslide"</code> attribute. Only works for links whose URLs
+      end in <kbd>.jp[e]g</kbd>, <kbd>.png</kbd> or <kbd>.gif</kbd>, and may
+      have unintended side-effects, so use with caution. Default is
+      <code>false</code>.</li>
 
-			<li><code>no_wait</code>: set to <code>true</code> to initialise
-			QuickSlide as soon as the browser has downloaded it. This is useful if if
-			you are adding <kbd>quickslide.js</kbd> to your page after the DOM
-			<kbd>onload</kbd> event has already fired (e.g. via insertion of a
-			<kbd>&lt;script&gt;</kbd> tag). Default is <code>false</code>, meaning
-			QuickSlide waits for the <kbd>onload</kbd> event before initialising.
-			This option will be ignored if you load <kbd>quickslide.js</kbd> from the
-			document <kbd>&lt;head&gt;</kbd>, since in those instances there won't
-			yet be a document body to append the necessary elements (popup box and
-			dimmer) to.</li>
+      <li><code>no_wait</code>: set to <code>true</code> to initialise
+      QuickSlide as soon as the browser has downloaded it. This is useful if if
+      you are adding <kbd>quickslide.js</kbd> to your page after the DOM
+      <kbd>onload</kbd> event has already fired (e.g. via insertion of a
+      <kbd>&lt;script&gt;</kbd> tag). Default is <code>false</code>, meaning
+      QuickSlide waits for the <kbd>onload</kbd> event before initialising.
+      This option will be ignored if you load <kbd>quickslide.js</kbd> from the
+      document <kbd>&lt;head&gt;</kbd>, since in those instances there won't
+      yet be a document body to append the necessary elements (popup box and
+      dimmer) to.</li>
 
-		</ul>
+    </ul>
 
-		<p>You can (and should) use CSS to customise the appearance of the popup
-		and associated elements &ndash; see the <a href="quickslide.css">demo
-			CSS file</a> for more examples.</p>
+    <p>You can (and should) use CSS to customise the appearance of the popup
+    and associated elements &ndash; see the <a href="quickslide.css">demo
+      CSS file</a> for more examples.</p>
 
-		<h2>Download</h2>
-		<ul>
-			<li><a href="quickslide.zip">quickslide.zip</a> (7.6KB) &ndash; contains
-			a minified and a normal version of the code, a small loading spinner
-			image, and a sample CSS file (the <a href="quickslide.css">same one</a>
-			as used on this page).</li>
-			<li><a href="quickslide-min.js">quickslide-min.js</a> (4.7KB) &ndash; just
-			the minified JavaScript code.</li>
-		</ul></p>
+    <h2>Download</h2>
+    <ul>
+      <li><a href="quickslide.zip">quickslide.zip</a> (7.6KB) &ndash; contains
+      a minified and a normal version of the code, a small loading spinner
+      image, and a sample CSS file (the <a href="quickslide.css">same one</a>
+      as used on this page).</li>
+      <li><a href="quickslide-min.js">quickslide-min.js</a> (4.7KB) &ndash; just
+      the minified JavaScript code.</li>
+    </ul></p>
 
-		<p>QuickSlide is also on <a href="https://github.com/caerphoto/QuickSlide">
-		GitHub</a>; the repo contains some additional files that let QuickSlide
-		work as a Chrome extension, although this is only experimental at present.</p>
+    <p>QuickSlide is also on <a href="https://github.com/caerphoto/QuickSlide">
+      GitHub</a>; the repo contains some additional files that let QuickSlide
+    work as a Chrome extension, although this is only experimental at present.</p>
 
-		<h2>Example</h2>
-		<p>Click thumbnails to show larger image; click large image or press
-		<kbd>Esc</kbd> to hide it again.</p>
+    <h2>Example</h2>
+    <p>Click thumbnails to show larger image; click large image or press
+    <kbd>Esc</kbd> to hide it again.</p>
 
-		<div class="gallery">
-			<a href="images/buslane_b.jpg" rel="quickslide"
-				title="A bus lane in Stoke, England">
-				<img src="images/buslane_t.jpg"/>Bus Lane
-			</a>
+    <div class="gallery">
+      <a href="images/buslane_b.jpg" rel="quickslide">
+        <img src="images/buslane_t.jpg"/>Bus Lane
+      </a>
 
-			<a href="images/cathedral_b.jpg" rel="quickslide"
-				title="Liverpool Anglican cathedral">
-				<img src="images/cathedral_t.jpg"/>Cathedral
-			</a>
+      <a href="images/buslane_b.jpg" rel="quickslide"
+        title="A bus lane in Stoke, England">
+        <img src="images/buslane_t.jpg"/>Bus Lane
+      </a>
 
-			<a href="images/euston_b.jpg" rel="quickslide"
-				title="London Euston train station">
-				<img src="images/euston_t.jpg"/>Euston
-			</a>
+      <a href="images/cathedral_b.jpg" rel="quickslide"
+        title="Liverpool Anglican cathedral">
+        <img src="images/cathedral_t.jpg"/>Cathedral
+      </a>
 
-			<a href="images/gig_b.jpg" rel="quickslide"
-				title="Al O'Hare, lead singer of <a
-					href='http://www.myspace.com/thetrestles'>The Trestles</a>, a band
-				from Liverpool, England">
-				<img src="images/gig_t.jpg"/>Gig
-			</a>
+      <a href="images/euston_b.jpg" rel="quickslide"
+        title="London Euston train station">
+        <img src="images/euston_t.jpg"/>Euston
+      </a>
 
-			<a href="images/hedge_b.jpg" rel="quickslide"
-				title="A road sign partly concealed by a hedge">
-				<img src="images/hedge_t.jpg"/>Hedge
-			</a>
+      <a href="images/gig_b.jpg" rel="quickslide"
+        title="Al O'Hare, lead singer of <a
+          href='http://www.myspace.com/thetrestles'>The Trestles</a>, a band
+        from Liverpool, England">
+        <img src="images/gig_t.jpg"/>Gig
+      </a>
 
-			<a href="images/lucy_b.jpg" rel="quickslide"
-				title="My cat, Lucy">
-				<img src="images/lucy_t.jpg"/>Cat
-			</a>
+      <a href="images/hedge_b.jpg" rel="quickslide"
+        title="A road sign partly concealed by a hedge">
+        <img src="images/hedge_t.jpg"/>Hedge
+      </a>
 
-			<a href="images/snow_b.jpg"
-				title="This image was loaded because the <kbd>auto_detect</kbd> option
-				was specified in configuration.">
-				<img src="images/snow_t.jpg"/>Link with no <br><kbd>rel</kbd> attribute
-			</a>
+      <a href="images/lucy_b.jpg" rel="quickslide"
+        title="My cat, Lucy">
+        <img src="images/lucy_t.jpg"/>Cat
+      </a>
 
-			<a href="images/totoro_b.jpg" rel="quickslide"
-				title="<a href='http://www.imdb.com/title/tt0096283/'>Totoro!</a>">
-				<img src="images/totoro_t.jpg"/>Totoro
-			</a>
+      <a href="images/snow_b.jpg"
+        title="This image was loaded because the <kbd>auto_detect</kbd> option
+        was specified in configuration.">
+        <img src="images/snow_t.jpg"/>Link with no <br><kbd>rel</kbd> attribute
+      </a>
 
-			<a href="images/catroof_b.jpg" rel="quickslide"
-				title="This image has been resized by the browser from 1024 pixels
-				high."> <img src="images/catroof_t.jpg"/>Cat on Roof
-			</a>
+      <a href="images/totoro_b.jpg" rel="quickslide"
+        title="<a href='http://www.imdb.com/title/tt0096283/'>Totoro!</a>">
+        <img src="images/totoro_t.jpg"/>Totoro
+      </a>
 
-			<a href="foobar" rel="quickslide" title="Broken link test">Broken Link
-				Test</a>
-		</div>
+      <a href="images/catroof_b.jpg" rel="quickslide"
+        title="This image has been resized by the browser from 1024 pixels
+        high."> <img src="images/catroof_t.jpg"/>Cat on Roof
+      </a>
 
-		<p>contact: <a
-			href="mai&#108;to&#58;quickslide&#64;caerphoto.com">quickslide&#64;caerphoto.com</a>
-			&middot; site: <a href="/">caerphoto.com</a></p>
+      <a href="foobar" rel="quickslide" title="Broken link test">Broken Link
+        Test</a>
+    </div>
 
-		<script>
-			var QuickSlideConfig = {
-				max_height: 500,
-				show_caption: true,
-				auto_detect: true,
-				use_dimmer: true };
-		</script>
-		<script src="quickslide.js"></script>
-	</body>
+    <p>contact: <a
+      href="mai&#108;to&#58;quickslide&#64;caerphoto.com">quickslide&#64;caerphoto.com</a>
+    &middot; site: <a href="/">caerphoto.com</a></p>
+
+    <script>
+      var QuickSlideConfig = {
+        max_height: 500,
+        show_caption: true,
+        auto_detect: true,
+        no_wait: true,
+        use_dimmer: true };
+    </script>
+    <script src="quickslide.js"></script>
+  </body>
 </html>
 

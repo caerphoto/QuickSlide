@@ -1,12 +1,14 @@
 /* This is the main popup box. */
 #quickslide-popup-box {
-    background-color: #DDD;
     border-width: 1px;
     border-style: solid;
-    border-color: #EEE #CCC #CCC #EEE;
-    padding: 10px;
+    border-radius: 1px;
+    border-color: #666;
+
+    padding: 20px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    border-radius: 3px;
+
+    background-color: #333;
     background-image: url("loading-spinner.gif");
     background-repeat: no-repeat;
     background-position: center;
@@ -14,27 +16,24 @@
 
 /* Simple hint box, because it's not immediately obvious how to get rid of the
  * popup. */
-#quickslide-popup-box:after {
+#quickslide-popup-box::after {
     content: "click anywhere to close";
     position: absolute;
-    top: 20px;
+    top: 2px;
     right: 20px;
-    padding: 3px 5px;
-
-    background: rgba(255,255,255, 0.8);
-    box-shadow: 0px 3px 7px rgba(0, 0, 0, 0.1);
-    border-radius: 2px;
+    padding: 0;
 
     font-size: 11px;
-    color: #000;
-    text-shadow: 0 1px 1px #f0f0f0;
-
-    cursor: pointer;
+    font-weight: normal;
+    color: #888;
+    background: none;
+    text-shadow: none;
+    box-shadow: none;
 
     visibility: hidden;
 }
 
-#quickslide-popup-box:hover:after {
+#quickslide-popup-box:hover::after {
     visibility: visible;
 }
 
@@ -55,17 +54,25 @@
     display: block;
     border-width: 1px;
     border-style: solid;
-    border-color: #D0D0D0 #E4E4E4 #E4E4E4 #D0D0D0;
+    border-color: #888;
     -ms-interpolation-mode: bicubic;
     image-rendering: optimizeQuality;
+    margin: 0;
 }
 
 /* No prizes for guessing what this is. */
 #quickslide-caption {
     text-align: center;
-    color: #333;
-    margin-top: 10px;
-    text-shadow: 0 1px 1px #fff;
+    color: #ddd;
+    text-shadow: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+    font: 14px / 1.4 sans-serif;
+}
+
+#quickslide-caption:empty {
+    margin: 0;
 }
 
 /* Since you can specify HTML for use in the caption, you can also set style
