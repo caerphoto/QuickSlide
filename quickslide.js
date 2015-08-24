@@ -1,9 +1,13 @@
-/*globals window, chrome */
-// Global config object, which can be defined in a <script> tag in the HTML.
-// Contains settings for max image dimensions, auto-scaling, etc.
-var QuickSlideConfig;
+(function (root, factory) {
+    // Asynchronous module definition, as per
+    // https://github.com/umdjs/umd/blob/master/amdWeb.js
 
-(function (config) {
+    if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else {
+        root.QuickSlide = factory();
+    }
+}(this, function () {
     "use strict";
     var popupImg,
         popupBox,
@@ -18,7 +22,19 @@ var QuickSlideConfig;
         normalizeEvent, addListener, triggerEvent,
 
         // Other functions:
-        init, setupGalleryLinks, setPopup, recenterBox, showImage, hidePopup;
+        createPopup, setupGalleryLinks, setPopup, recenterBox, showImage,
+        hidePopup, applyConfig;
+
+    var config = {
+        //max_width: 800,
+        //max_height: 600,
+        use_dimmer: false,
+        absolute_position: false,
+        show_caption: true,
+        auto_fit: true,
+        auto_detect: false,
+        no_wait: false
+    };
 
 
     // Bail out immediately if there's already a QuickSlide box on the page.
@@ -242,7 +258,7 @@ var QuickSlideConfig;
         // loads, so all images display at the same size as the first one to be
         // opened.
         popupImg = document.createElement("img");
-        popupImg.id = "quickslide-image";
+        popupImg.className = "quickslide-image";
         popupImg.style.display = "none";
 
         addListener(popupImg, "error", function () {
@@ -302,24 +318,37 @@ var QuickSlideConfig;
         }
     };
 
+    applyConfig = function (newConfig) {
+        var key;
+
+        if (!newConfig || typeof newConfig !== 'object') {
+            return;
+        }
+
+        for (key in config) {
+            if (!config.hasOwnProperty(key)){
+                continue;
+            }
+
+            if (newConfig.hasOwnProperty(key)) {
+                config[key] = newConfig[key];
+            }
+        }
+    };
+
     /* Initialisation stuff *
      * -------------------- */
 
-    init = function () {
+    createPopup = function () {
         var s;
 
         popupBox = document.createElement("div");
-        popupBox.id = "quickslide-popup-box";
+        popupBox.className = "quickslide-popup-box";
 
         s = popupBox.style;
         s.position = config.absolute_position ? "absolute" : "fixed";
         s.zIndex = "9999";
         s.display = "none";
-
-        if (config.chrome_extension) {
-            s = chrome.extension.getURL("loading-spinner.gif");
-            popupBox.style.backgroundImage = ["url(", s, ")"].join("'");
-        }
 
         addListener(popupBox, "click", function () {
             hidePopup();
@@ -329,7 +358,7 @@ var QuickSlideConfig;
 
         if (config.use_dimmer) {
             dimmer = document.createElement("div");
-            dimmer.id = "quickslide-dimmer";
+            dimmer.className = "quickslide-dimmer";
 
             s = dimmer.style;
             s.position = "fixed";
@@ -356,41 +385,23 @@ var QuickSlideConfig;
 
         if (config.show_caption) {
             popupCaption = document.createElement("div");
-            popupCaption.id = "quickslide-caption";
+            popupCaption.className = "quickslide-caption";
             popupBox.appendChild(popupCaption);
         }
 
         setupGalleryLinks();
     };
 
-    if (config.chrome_extension) {
-        // Wait for the background page to reply with config info before
-        // initialising, otherwise config will be blank.
-        chrome.extension.sendRequest({ func: "getConfig" }, function (response) {
-            var c = response.config;
+    return function (userConfig) {
+        applyConfig(userConfig);
 
-            config.max_width = c.max_width;
-            config.max_height = c.max_height;
-            config.use_dimmer = c.use_dimmer;
-            config.absolute_position = c.absolute_position;
-            config.show_caption = c.show_caption;
-            config.auto_fit = c.auto_fit;
-            config.auto_detect = true;
-            config.no_wait = true;
-
-            init();
-        });
-    } else {
-        // If script is loaded from the document <head> with the no_wait
-        // option, problems will arise as the init() function will try to
-        // append elements to the document body, which doesn't exist yet.
         if (config.no_wait && document.body) {
-            init();
+            createPopup();
         } else {
             addListener(window, "load", function () {
-                init();
+                createPopup();
             });
         }
-    }
+    };
 
-}(QuickSlideConfig || {}));
+}));

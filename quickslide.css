@@ -1,5 +1,5 @@
 /* This is the main popup box. */
-#quickslide-popup-box {
+.quickslide-popup-box {
     border-width: 1px;
     border-style: solid;
     border-radius: 1px;
@@ -16,7 +16,7 @@
 
 /* Simple hint box, because it's not immediately obvious how to get rid of the
  * popup. */
-#quickslide-popup-box::after {
+.quickslide-popup-box::after {
     content: "click anywhere to close";
     position: absolute;
     top: 2px;
@@ -33,24 +33,24 @@
     visibility: hidden;
 }
 
-#quickslide-popup-box:hover::after {
+.quickslide-popup-box:hover::after {
     visibility: visible;
 }
 
 /* The popup gets the class "loading" when a link is clicked, and the class is
  * removed once the image begins downloading. */
-#quickslide-popup-box.loading {
+.quickslide-popup-box.loading {
     width: 16px;
     height: 16px;
 }
 
 /* The popup gets given this class once the image has fully downloaded. */
-#quickslide-popup-box.loaded {
+.quickslide-popup-box.loaded {
     background-image: none;
 }
 
 /* This is the main image shown in the popup. */
-#quickslide-image {
+.quickslide-image {
     display: block;
     border-width: 1px;
     border-style: solid;
@@ -61,7 +61,7 @@
 }
 
 /* No prizes for guessing what this is. */
-#quickslide-caption {
+.quickslide-caption {
     text-align: center;
     color: #ddd;
     text-shadow: none;
@@ -71,17 +71,17 @@
     font: 14px / 1.4 sans-serif;
 }
 
-#quickslide-caption:empty {
+.quickslide-caption:empty {
     margin: 0;
 }
 
 /* Since you can specify HTML for use in the caption, you can also set style
  * rules for any elements it contains. */
-#quickslide-caption a {
+.quickslide-caption a {
     color: #050;
 }
 
-#quickslide-dimmer {
+.quickslide-dimmer {
     background-color: #333;
     /* IE-only method for changing opacity */
     filter: alpha(opacity = 80);
