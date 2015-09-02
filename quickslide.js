@@ -224,12 +224,12 @@
     }
 
     function setPopupFromNode(node) {
+        var caption;
+
         if (config.use_dimmer) {
             dimmer.style.display = "";
-            //document.body.appendChild(dimmer);
         }
 
-        //document.body.appendChild(popupBox);
         addClassTo(popupBox, "loading");
         popupBox.style.display = "";
         recenterBox(popupBox);
@@ -256,7 +256,12 @@
 
         if (config.show_caption) {
             popupCaption.style.display = "none";
-            popupCaption.innerHTML = node.getAttribute("title");
+            caption = node.getAttribute("title");
+            if (!caption) {
+                caption = node.getAttribute("href").split("/");
+                caption = caption[caption.length - 1];
+            }
+            popupCaption.innerHTML = caption;
         }
 
         popupImg.addEventListener("load", function () {
