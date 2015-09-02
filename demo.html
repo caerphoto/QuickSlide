@@ -26,10 +26,12 @@
   &lt;img src="images/buslane_t.jpg"&gt;Bus Lane
 &lt;/a&gt;
 </code></pre>
+
       <p>Make sure these links point to images, otherwise QuickSlide will get
       confused.</p>
 
       </li>
+      <li><p>Call the <code>QuickSlide()</code> function, either in your existing code, or in a <kbd>&lt;script&gt;</kbd> tag after one above.</p></li>
     </ol>
     <p>That&rsquo;s it! QuickSlide is designed to be an unobtrusive, progressive
     enhancement to existing pages: it won&rsquo;t interfere with other
@@ -37,25 +39,33 @@
     some reaon the code fails to load. It will also work on any links added to
     a page dynamically via JavaScript.</p>
 
+    <h2>As an AMD module</h2>
+    <p>QuickSlide is AMD-compatible, so you can use it with loaders like <a href="">RequireJS</a>:</p>
+<pre><code class="de-em">// some_module.js
+<em>define(["quickslide"], function (QS) {
+  QS();
+});</em></code></pre>
+
     <h2>Configuration</h2>
     <p>There are a few options you can specify to control the behaviour of the
-    popups. They are set using a <kbd>&lt;script&gt;</kbd> tag anywhere before
-    the inclusion of the main <kbd>quickslide.js</kbd> file, like so:</p>
+    popups. They are set by passing an object as the parameter to the
+    <code>QuickSlide</code> function:</p>
 
-<pre><code class="de-em"><em>&lt;script&gt;
-QuickSlideConfig = {
+<pre><code class="de-em"><span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
+
+&lt;script&gt;
+<em>QuickSlide({
     max_width: 800,
     max_height: 600,
     use_dimmer: true,
     absolute_position: true,
     show_caption: true,
+    navigation: true,
     auto_fit: false,
     auto_detect: true,
-    no_wait: true };
-&lt;/script&gt;</em>
-
-<span class="de-em">&lt;script src="quickslide.js"&gt;&lt;/script&gt;</span>
-</code></pre>
+    no_wait: true
+});</em>
+&lt;/script&gt;</code></pre>
 
     <p> An explanation of the options:</p>
     <ul>
@@ -78,9 +88,16 @@ QuickSlideConfig = {
       <li><code>show_caption</code>: set to <code>true</code> to use the source
       link&rsquo;s <code>title</code> attribute as a caption for the popup
       image. You can use HTML in the title and it will be inserted as normal on
-      the caption (see the 'Gig' image below for an example). Default is
-      <code>false</code>. The caption is a <kbd>&lt;div&gt;</kbd> with an ID of
-      <code>quickslide-caption</code>.</li>
+      the caption (see the &lsquo;Gig&rsquo; image below for an example). If
+      <code>true</code> but no <code>title</code> attribute is found, the
+      image&rsquo;s filename will be used instead. Default is
+      <code>false</code>. The caption is a <kbd>&lt;div&gt;</kbd> with a class
+      of <code>quickslide-caption</code>.</li>
+
+      <li><code>navigation</code>: set to <code>true</code> to show Previous
+      and Next links in the popup, and to allow use of left and right arrow
+      keys to navigate through all detected images. Default is
+      <code>true</code>.
 
       <li><code>auto_fit</code>: set this to <code>false</code> to allow popups
       to be larger than the browser window. Default is <code>true</code>.</li>
