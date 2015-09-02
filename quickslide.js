@@ -2,28 +2,21 @@
     // Asynchronous module definition, as per
     // https://github.com/umdjs/umd/blob/master/amdWeb.js
 
-    if (typeof define === 'function' && define.amd) {
+    if (typeof define === "function" && define.amd) {
         define(factory);
     } else {
         root.QuickSlide = factory();
     }
 }(this, function () {
     "use strict";
-    var popupImg,
-        popupBox,
-        dimmer, popupCaption,
 
-        // Interval timer used when polling an Image object for size info.
-        sizeTimer,
+    var popupImg;
+    var popupBox;
+    var dimmer;
+    var popupCaption;
 
-        // These three are event normalisation functions based on examples in
-        // 'Eloquent JavaScript', by Marijn Haverbeke:
-        // http://eloquentjavascript.net/chapter13.html
-        normalizeEvent, addListener, triggerEvent,
-
-        // Other functions:
-        createPopup, setupGalleryLinks, setPopup, recenterBox, showImage,
-        hidePopup, applyConfig;
+    // Interval timer used when polling an Image object for size info.
+    var sizeTimer;
 
     var config = {
         //max_width: 800,
@@ -33,8 +26,12 @@
         show_caption: true,
         auto_fit: true,
         auto_detect: false,
-        no_wait: false
+        no_wait: false,
+        navigation: true
     };
+
+    var imageLinks = [];
+    var currentLink = null;
 
 
     // Bail out immediately if there's already a QuickSlide box on the page.
@@ -43,61 +40,74 @@
         return;
     }
 
-    normalizeEvent = function (e) {
-        // Make the event object standard within event handlers.
+    function nonWhitespace(text) {
+        return !(/^\s+$/).test(text);
+    }
 
-        if (!e.stopPropagation) {
-            e.stopPropagation = function () {
-                this.cancelBubble = true;
-            };
+    function addClassTo(element, className) {
+        var elementClasses = element.className.split(" ").filter(nonWhitespace);
+        var newClasses = className.split(" ").filter(nonWhitespace);
 
-            e.preventDefault = function () {
-                this.returnValue = false;
-            };
+        newClasses.forEach(function (c) {
+            if (elementClasses.indexOf(c) === -1) {
+                elementClasses.push(c);
+            }
+        });
+
+        element.className = elementClasses.join(" ");
+    }
+
+    function removeClassFrom(element, className) {
+        var elementClasses = element.className.split(" ").filter(nonWhitespace);
+        var classesToRemove = className.split(" ").filter(nonWhitespace);
+        var index = elementClasses.length - 1;
+
+        while (index >= 0) {
+            if (classesToRemove.indexOf(elementClasses[index]) !== -1) {
+                elementClasses.splice(index, 1);
+            }
+
+            index -= 1;
         }
 
-        if (e.srcElement && !e.target) {
-            e.target = e.srcElement;
-        }
+        element.className = elementClasses.join(" ");
+    }
 
-        return e;
-    };
+    function isImageLink(link) {
+        // Checks whether the given link's "href" attribute ends in an
+        // image-related extension, and the link doesn't contain '=http',
+        // which usually indicates a redirect to another domain, not an
+        // actual image URL.
+        // Also returns false if the link already has a click handler,
+        // albeit only the old-style assignation, since browser support for
+        // element.eventListenerList is limited as of April 2012.
+        var href = link.getAttribute("href");
+        var imgExt = /\.(jp(e?)g|png|gif|svg)$/i;
+        var redirect = /=http/;
 
-    addListener = function (node, type, handler) {
-        // Cross-browser event handler binding.
-        var wrapHandler = function (e) {
-            // Make 'this' inside the handler refer to the 'node' parameter.
-            handler.apply(node, [normalizeEvent(e || window.event)]);
-        };
+        return imgExt.test(href) && !redirect.test(href) && !link.onclick;
+    }
 
-        if (node.attachEvent) {
-            // Attach handler for IE.
-            node.attachEvent("on" + type, wrapHandler);
-        } else {
-            // Attach handler for standards-compliant browsers.
-            node.addEventListener(type, wrapHandler, false);
-        }
+    function shouldHandle(testEl) {
+        // Returns true if the given element is a valid link to an image.
+        var nodeName = testEl.nodeName.toUpperCase();
+        var rel = (testEl.getAttribute("rel") || "").toUpperCase();
 
-        return { node: node, type: type, handler: wrapHandler };
-    };
+        return nodeName === "A" && (
+            rel === "QUICKSLIDE" || (
+                config.auto_detect && isImageLink(testEl)
+            )
+        );
+    }
 
-    triggerEvent = function (node, type) {
-        // Cross-browser event triggering.
-        var evt;
+    function collectLinks() {
+        var allLinks = document.querySelectorAll("a");
+        return Array.prototype.filter.call(allLinks, function (link) {
+            return shouldHandle(link);
+        });
+    }
 
-        if (document.createEventObject) {
-            // Dispatch for IE.
-            evt = document.createEventObject();
-            return node.fireEvent("on" + type, evt);
-        } else {
-            // Dispatch for standards-compliant browsers.
-            evt = document.createEvent("HTMLEvents");
-            evt.initEvent(type, true, true); // event type, bubbling, cancelable
-            return !node.dispatchEvent(evt);
-        }
-    };
-
-    setupGalleryLinks = function () {
+    function setEventHandlers() {
         /* Attach a click handler to the document body that listens for clicks,
         *  then if the clicked element is not one we're interested in, traverse
         *  up the DOM tree until we reach either an element we're interested
@@ -107,34 +117,9 @@
         *  element, so it still works even on elements that are added
         *  dynamically after page load.
         */
-        var isImageLink, isQ;
-
-        isImageLink = function (link) {
-            // Checks whether the given link's "href" attribute ends in an
-            // image-related extension, and the link doesn't contain '=http',
-            // which usually indicates a redirect to another domain, not an
-            // actual image URL.
-            // Also returns false if the link already has a click handler,
-            // albeit only the old-style assignation, since browser support for
-            // element.eventListenerList is limited as of April 2012.
-            var href = link.getAttribute("href"),
-                imgExt = /\.(jp(e?)g|png|gif)$/i,
-                redirect = /=http/;
-            return imgExt.test(href) && !redirect.test(href) && !link.onclick;
-        };
-
-        isQ = function (testEl) {
-            // Returns true if the given element is a valid link to an
-            // image.
-            var nodeName = testEl.nodeName.toUpperCase(),
-                rel = (testEl.getAttribute("rel") || "").toUpperCase();
-
-            return nodeName === "A" && (rel === "QUICKSLIDE" ||
-                (config.auto_detect && isImageLink(testEl)));
-        };
 
         // Function similar to jQuery's .live() or .delegate().
-        addListener(document.body, "click", function (e) {
+        document.body.addEventListener("click", function (e) {
             var el = e.target;
 
             // Ignore clicks if shift is held.
@@ -149,18 +134,18 @@
             }
 
             // Traverse up the tree.
-            while (el && !isQ(el) && el !== this) {
+            while (el && !shouldHandle(el) && el !== this) {
                 el = el.parentNode;
             }
 
-            if (el && isQ(el)) {
+            if (el && shouldHandle(el)) {
                 e.preventDefault();
-                setPopup(el);
+                setPopupFromNode(el);
             }
-        });
-    };
+        }, false);
+    }
 
-    recenterBox = function (box, srcImg) {
+    function recenterBox(box, srcImg) {
         // Puts the popup box in the centre of the window, based on the size of
         // the given image. If the image is larger than the window it is scaled
         // down to fit, if that option is specified in config.
@@ -236,16 +221,16 @@
             (config.absolute_position ?  scrollTop : 0) -
             (py / 2)) + "px";
         bs.left = (Math.round((cw - w) / 2) - px / 2) + "px";
-    };
+    }
 
-    setPopup = function (fromNode) {
+    function setPopupFromNode(node) {
         if (config.use_dimmer) {
             dimmer.style.display = "";
             //document.body.appendChild(dimmer);
         }
 
         //document.body.appendChild(popupBox);
-        popupBox.className = "loading";
+        addClassTo(popupBox, "loading");
         popupBox.style.display = "";
         recenterBox(popupBox);
 
@@ -261,25 +246,26 @@
         popupImg.className = "quickslide-image";
         popupImg.style.display = "none";
 
-        addListener(popupImg, "error", function () {
+        popupImg.addEventListener("error", function () {
             if (!popupImg.width && !popupImg.height) {
                 //alert("There was a problem loading the image.\n\nThe server might have taken too long to respond, or the image might have been deleted.");
                 hidePopup();
                 window.location = popupImg.src;
             }
-        });
+        }, false);
 
         if (config.show_caption) {
             popupCaption.style.display = "none";
-            popupCaption.innerHTML = fromNode.getAttribute("title");
+            popupCaption.innerHTML = node.getAttribute("title");
         }
 
-        addListener(popupImg, "load", function () {
-            popupBox.className = "loaded";
-        });
+        popupImg.addEventListener("load", function () {
+            removeClassFrom(popupBox, "loading");
+            addClassTo(popupBox, "loaded");
+        }, false);
 
         // Start loading image.
-        popupImg.src = fromNode.getAttribute("href");
+        popupImg.src = node.getAttribute("href");
 
         sizeTimer = setInterval(function () {
             if (popupImg.width || popupImg.height) {
@@ -287,12 +273,14 @@
                 showImage();
             }
         }, 100);
-    };
 
-    showImage = function () {
+        currentLink = node;
+    }
+
+    function showImage() {
         // Handler for when the full-sized image is ready to be shown in the
         // popup.
-        popupBox.className = "";
+        removeClassFrom(popupBox, "loading loaded");
         popupImg.style.display = "";
 
         if (config.show_caption) {
@@ -303,25 +291,40 @@
         }
 
         recenterBox(popupBox, popupImg);
-    };
+    }
 
-    hidePopup = function () {
+    function hidePopup() {
         clearInterval(sizeTimer);
 
         if (popupBox.parentNode === document.body) {
             popupBox.style.display = "none";
-            //document.body.removeChild(popupBox);
             if (config.use_dimmer) {
                 dimmer.style.display = "none";
-                //document.body.removeChild(dimmer);
             }
         }
-    };
+    }
 
-    applyConfig = function (newConfig) {
+    function changePopupSourceBy(delta) {
+        var index = imageLinks.indexOf(currentLink);
+        if (index === -1) {
+            return;
+        }
+
+        index += delta;
+
+        if (index === -1) {
+            index = imageLinks.length - 1;
+        } else if (index >= imageLinks.length - 1) {
+            index = 0;
+        }
+
+        setPopupFromNode(imageLinks[index]);
+    }
+
+    function applyConfig(newConfig) {
         var key;
 
-        if (!newConfig || typeof newConfig !== 'object') {
+        if (!newConfig || typeof newConfig !== "object") {
             return;
         }
 
@@ -334,13 +337,14 @@
                 config[key] = newConfig[key];
             }
         }
-    };
+    }
 
     /* Initialisation stuff *
      * -------------------- */
 
-    createPopup = function () {
+    function init() {
         var s;
+        var navPrev, navNext;
 
         popupBox = document.createElement("div");
         popupBox.className = "quickslide-popup-box";
@@ -350,9 +354,17 @@
         s.zIndex = "9999";
         s.display = "none";
 
-        addListener(popupBox, "click", function () {
+        popupBox.addEventListener("click", function (evt) {
+            var delta = parseInt(evt.target.getAttribute("data-delta"), 10);
+            if (evt.target.nodeName.toUpperCase() === "A" && delta) {
+                changePopupSourceBy(delta);
+                evt.stopPropagation();
+                evt.preventDefault();
+                return false;
+            }
+
             hidePopup();
-        });
+        }, false);
 
         document.body.appendChild(popupBox);
 
@@ -369,19 +381,43 @@
             s.left = "0";
             s.display = "none";
 
-            addListener(dimmer, "click", function () {
+            dimmer.addEventListener("click", function () {
                 hidePopup();
-            });
-
-            addListener(document.body, "keydown", function (e) {
-                // Hide popup is [esc] is pressed.
-                if (e.keyCode === 27) {
-                    hidePopup();
-                }
-            });
+            }, false);
 
             document.body.appendChild(dimmer);
         }
+
+        if (config.navigation) {
+            navPrev = document.createElement("a");
+            navNext = document.createElement("a");
+            navPrev.href = navNext.href = "#";
+            navPrev.setAttribute("data-delta", -1);
+            navNext.setAttribute("data-delta", 1);
+            navPrev.className = "quickslide-nav quickslide-nav-prev";
+            navNext.className = "quickslide-nav quickslide-nav-next";
+            navPrev.appendChild(document.createTextNode("Previous"));
+            navNext.appendChild(document.createTextNode("Next"));
+
+            popupBox.appendChild(navPrev);
+            popupBox.appendChild(navNext);
+        }
+
+        document.body.addEventListener("keydown", function (e) {
+            // Hide popup is [esc] is pressed.
+            if (e.keyCode === 27) {
+                hidePopup();
+            }
+
+            if (e.keyCode === 37) { // left arrow
+                changePopupSourceBy(-1);
+            }
+
+            if (e.keyCode === 39) { // right arrow
+                changePopupSourceBy(1);
+            }
+        }, false);
+
 
         if (config.show_caption) {
             popupCaption = document.createElement("div");
@@ -389,18 +425,19 @@
             popupBox.appendChild(popupCaption);
         }
 
-        setupGalleryLinks();
-    };
+        setEventHandlers();
+        imageLinks = collectLinks();
+    }
 
     return function (userConfig) {
         applyConfig(userConfig);
 
         if (config.no_wait && document.body) {
-            createPopup();
+            init();
         } else {
-            addListener(window, "load", function () {
-                createPopup();
-            });
+            window.addEventListener("load", function () {
+                init();
+            }, false);
         }
     };
 

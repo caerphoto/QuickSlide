@@ -17,7 +17,7 @@
 /* Simple hint box, because it's not immediately obvious how to get rid of the
  * popup. */
 .quickslide-popup-box::after {
-    content: "click anywhere to close";
+    content: "click image to close";
     position: absolute;
     top: 2px;
     right: 20px;
@@ -47,6 +47,55 @@
 /* The popup gets given this class once the image has fully downloaded. */
 .quickslide-popup-box.loaded {
     background-image: none;
+}
+
+.quickslide-nav {
+    position: absolute;
+    display: none;
+    top: 0;
+    bottom: 0;
+    width: 8em;
+    text-indent: -999em;
+}
+
+.quickslide-nav:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.quickslide-nav::after {
+    text-indent: 0;
+    display: block;
+    position: absolute;
+    top: 50%;
+    margin-top: -0.7em;
+    left: 45%;
+    font-size: 4em;
+    color: #fff;
+    content: "\276c"; /* Medium Left-Pointing Angle Bracket Ornament */
+    text-shadow: 0 1px 1em #000;
+    opacity: 0.2;
+}
+
+.quickslide-nav:hover::after {
+    opacity: 1;
+}
+
+.quickslide-nav-next::after {
+    content: "\276d"; /* Medium Right-Pointing Angle Bracket Ornament */
+}
+
+.quickslide-popup-box:hover .quickslide-nav {
+    display: block;
+}
+
+.quickslide-nav-prev {
+    left: -8em;
+    box-shadow: inset -8em 0 6em -4em rgba(0, 0, 0, 0.2);
+}
+
+.quickslide-nav-next {
+    right: -8em;
+    box-shadow: inset 8em 0 6em -4em rgba(0, 0, 0, 0.2);
 }
 
 /* This is the main image shown in the popup. */
